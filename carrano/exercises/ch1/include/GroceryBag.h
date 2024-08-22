@@ -3,6 +3,7 @@
 
 #include "BagInterface.h"
 #include <string>
+#include <algorithm>
 
 // Classes that inherit abstract classes must define all virtual methods
 // Otherwise they become abstract classes too
@@ -17,6 +18,7 @@ class GroceryBag : public BagInterface<std::string> {
     bool contains(const std::string& anEntry) const override;
     int getFrequencyOf(const std::string& anEntry) const override;
     std::vector<std::string> toVector() const override;
+    GroceryBag bagUnion(const GroceryBag& bag) const;
   private:
     std::vector<std::string> items;
 };

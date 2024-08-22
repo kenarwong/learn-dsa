@@ -1,6 +1,5 @@
+#include "headers.h"
 #include "GroceryBag.h"
-#include <algorithm>
-#include <string>
 
 // Implement all virtual functions
 int GroceryBag::getCurrentSize() const {
