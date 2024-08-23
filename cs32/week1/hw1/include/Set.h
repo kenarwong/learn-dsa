@@ -4,12 +4,15 @@ const int DEFAULT_MAX_ITEMS = 180;
 #define SET_H
 
 #include "main.h"
-using ItemType = const char*;
+using ItemType = std::string;
 
 class Set
 {
   public:
     Set();         // Create an empty set (i.e., one whose size() is 0).
+    //Set(const Set& other); // Copy constructor
+    //Set& operator=(const Set& other); // Assignment operator
+    //~Set(); // Destructor
 
     bool empty() const;  // Return true if the set is empty, otherwise false.
 
@@ -38,13 +41,14 @@ class Set
     void swap(Set& other);
       // Exchange the contents of this set with the other one.
     
-    void dump() const;
-      // Write to cout every item in the set one per line.  Write no other
-      // text.
+    //void dump() const;
+    //  // Write to cout every item in the set one per line.  Write no other
+    //  // text.
 
   private:
     int m_num;
-    ItemType m_items[DEFAULT_MAX_ITEMS];
+    int m_capacity;
+    ItemType* m_items;
 };
 
 #endif
