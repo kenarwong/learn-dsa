@@ -1,0 +1,82 @@
+#include "main.h"
+#include "Set.h"
+#include <cstring>
+
+Set::Set() {
+  std::memset( m_items, 0, sizeof(m_items) );
+  m_num = 0;
+}
+
+bool Set::empty() const {
+  if (this->size() == 0) {
+    return true;
+  }
+  return false;
+}
+
+int Set::size() const {
+  return m_num;
+}
+
+bool Set::insert(const ItemType& value) {
+  // Insert value into the set if it is not already present.  Return
+  // true if the value is actually inserted.  Leave the set unchanged
+  // and return false if value was not inserted (perhaps because it
+  // was already in the set or because the set has a fixed capacity and
+  // is full).
+
+  // Check if the set is full
+  if (m_num == DEFAULT_MAX_ITEMS) false;
+
+  // Check if the value is already in the set
+  // More efficient to use the contains function
+  if (contains(value)) return false;
+  
+  // Check if the value is already in the set
+  int i, j;
+  int k = m_num; // Default index of insert is the end of the set
+  for (i = 0; i < m_num; i++) {
+    //std::cout << "m_items[i]: " << m_items[i] << std::endl;
+    // string comparison
+    if (*value <= *m_items[i]) {
+      k = i; // Set k to the index for insert
+      break;
+    }
+  }
+
+  // Shift the values to the right to make room for the new value
+  for (j = m_num; j > k; j--) {
+    m_items[j] = m_items[j-1];
+  }
+
+  // Insert the value into the set
+  m_items[k] = value;
+  m_num++;
+
+  return true;
+}
+
+bool Set::erase(const ItemType& value) {
+  // Remove the value from the set if present.  Return true if the
+  // value was removed; otherwise, leave the set unchanged and
+  // return false.
+  return false;
+}
+
+bool Set::contains(const ItemType& value) const {
+  for (int i = 0; i < m_num; i++) {
+    if (m_items[i] == value) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Set::get(int i, ItemType& value) const {
+  // TODO: Implement the get function
+  return false;
+}
+
+void Set::swap(Set& other) {
+  // TODO: Implement the clear function
+}
