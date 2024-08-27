@@ -1,10 +1,10 @@
-//#ifndef TESTNEWSET_H
-//#define TESTNEWSET_H
+#ifndef TESTNEWSET_H
+#define TESTNEWSET_H
 
-//#include "newSet.h"
-//#include <string>
-//#include <cassert>
+#include "newSet.h"
+#include <string>
+#include <cassert>
 
-//int testnewSet();
+int testnewSet();
 
-//#endif
+#endif

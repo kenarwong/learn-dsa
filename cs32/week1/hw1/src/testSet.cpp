@@ -70,6 +70,8 @@ int testSet2()
   assert(s.size() == 1);
   assert(s.get(0, x) && x == 123456789);
   cout << "Passed all tests" << endl;
+
+  return 0;
 }
 
 int testPayerSet()
@@ -82,4 +84,6 @@ int testPayerSet()
   p.print();
 
   cout << "Passed all tests" << endl;
+
+  return 0;
 }

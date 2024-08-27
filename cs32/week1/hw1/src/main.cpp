@@ -1,8 +1,5 @@
 #include "main.h"
-#include "Set.h"
 #include "testSet.h"
-//#include "newSet.h"
-//#include "testnewSet.h"
 #include <cassert>
 
 int main()
@@ -15,8 +12,6 @@ int main()
 
   // PayerSet tests
   testPayerSet();
-
-  //testnewSet();
 
   return 0;
 }
