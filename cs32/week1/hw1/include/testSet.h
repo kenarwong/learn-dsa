@@ -5,6 +5,7 @@
 #include <string>
 #include <cassert>
 
-int test();
+int testSet();
+int testSet2();
 
 #endif
