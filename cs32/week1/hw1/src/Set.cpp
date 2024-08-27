@@ -41,8 +41,9 @@ Set::Set() {
 //
 //  return *this;
 //}
-//
+
 //// Destructor
+//// Not working properly
 //Set::~Set() {
 //  delete[] m_items;
 //}

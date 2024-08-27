@@ -1,5 +1,6 @@
 #include "main.h"
 #include "Set.h"
+#include "testSet.h"
 #include <cassert>
 
 int main()
@@ -48,5 +49,8 @@ int main()
   assert(ss1.size() == 2  &&  ss1.contains("matzo")  &&  ss1.contains("pita")  &&
          ss2.size() == 1  &&  ss2.contains("tortilla"));
 
+  // string tests
+  test();
+  
   return 0;
 }

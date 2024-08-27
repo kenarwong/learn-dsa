@@ -1,10 +1,11 @@
-const int DEFAULT_MAX_ITEMS = 180;
-
 #ifndef SET_H
 #define SET_H
 
 #include "main.h"
 using ItemType = std::string;
+//using ItemType = unsigned long;
+
+const int DEFAULT_MAX_ITEMS = 180;
 
 class Set
 {
