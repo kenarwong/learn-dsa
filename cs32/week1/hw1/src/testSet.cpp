@@ -1,4 +1,5 @@
 #include "testSet.h"
+#include "payerSet.h"
 using namespace std;
 
 //int testSet()
@@ -68,5 +69,17 @@ int testSet2()
   s.insert(123456789);
   assert(s.size() == 1);
   assert(s.get(0, x) && x == 123456789);
+  cout << "Passed all tests" << endl;
+}
+
+int testPayerSet()
+{
+  PayerSet p;
+  p.add(123456789);
+  p.add(987654321);
+  assert(p.size() == 2);
+
+  p.print();
+
   cout << "Passed all tests" << endl;
 }

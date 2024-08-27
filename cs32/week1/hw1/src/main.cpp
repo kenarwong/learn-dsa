@@ -13,6 +13,9 @@ int main()
   // unsigned long tests
   testSet2();
 
+  // PayerSet tests
+  testPayerSet();
+
   //testnewSet();
 
   return 0;
