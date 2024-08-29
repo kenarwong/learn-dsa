@@ -1,6 +1,8 @@
 #ifndef NODE_
 #define NODE_
 
+#include "headers.h"
+
 template<class ItemType>
 class Node
 {
@@ -18,4 +20,10 @@ class Node
     Node<ItemType>* next;
 };
 
+//// Explicit instantiation because we are separating the interface from the implementation
+//// C++ can't handle generic classes at runtime
+//template class Node<std::string>;
+
+// Alternative to explicit instantiation
+#include "Node.cpp"
 #endif

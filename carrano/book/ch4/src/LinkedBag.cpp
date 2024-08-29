@@ -1,5 +1,7 @@
 #include "LinkedBag.h"
 
+using ItemType = std::string;
+
 template<class ItemType>
 LinkedBag<ItemType>::LinkedBag() : headPtr(nullptr), itemCount(0) {
 }
