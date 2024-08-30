@@ -8,17 +8,27 @@ template<class ItemType>
 class ExerciseLinkedBag: public LinkedBag<ItemType>
 {
 public:
-   ExerciseLinkedBag();
-   //ExerciseLinkedBag(const LinkedBag<ItemType>& aBag);
-   //virtual ~ExerciseLinkedBag();
+  ExerciseLinkedBag();
+  ExerciseLinkedBag(const ItemType* arr, size_t size);
+  //ExerciseLinkedBag(const LinkedBag<ItemType>& aBag);
+  //virtual ~ExerciseLinkedBag();
 
-   int getCurrentSize() const override;
-   bool addToRear(const ItemType& newEntry);
+  bool addToRear(const ItemType& newEntry);
+
+  int getCurrentSizeIteratively() const;
+  int getCurrentSizeRecursively() const;
+
+  int getFrequencyOf(const ItemType& anEntry) const override;
+
+  bool removeRandomEntry();
 
 private:
-    //Node<ItemType>* headPtr; // Pointer to first node
-    //Node<ItemType>* tailPtr; // Pointer to last node
-    //int itemCount; // Current count of bag items
+  //Node<ItemType>* headPtr; // Pointer to first node
+  //Node<ItemType>* tailPtr; // Pointer to last node
+  //int itemCount; // Current count of bag items
+
+  int getCurrentSizeRecursively(int count, Node<ItemType>* curPtr) const;
+  int getFrequencyOf(int count, const ItemType& anEntry, Node<ItemType>* curPtr) const;
 };
 
 

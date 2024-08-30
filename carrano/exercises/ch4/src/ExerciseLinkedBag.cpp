@@ -1,9 +1,17 @@
 #include "ExerciseLinkedBag.h"
+#include <stdlib.h> 
 
 // Default constructor
 template<class ItemType>
 ExerciseLinkedBag<ItemType>::ExerciseLinkedBag() : LinkedBag<ItemType>() {
   // Initialize any member variables here
+}
+
+template<class ItemType>
+ExerciseLinkedBag<ItemType>::ExerciseLinkedBag(const ItemType* arr, size_t size) : LinkedBag<ItemType>() {
+  for (int i = 0; i < size; i++) {
+    this->add(arr[i]);
+  }
 }
 
 //// Destructor
@@ -32,6 +40,69 @@ bool ExerciseLinkedBag<ItemType>::addToRear(const ItemType& newEntry) {
 }
 
 template<class ItemType>
-int ExerciseLinkedBag<ItemType>::getCurrentSize() const {
-  return this->getCurrentSize();
+int ExerciseLinkedBag<ItemType>::getCurrentSizeIteratively() const {
+  // Iteratively
+  Node<ItemType>* curPtr = this->headPtr;
+  int count = 0;
+  while (curPtr != nullptr) {
+    count++;
+    curPtr = curPtr->getNext();
+  }
+
+  return count;
+}
+template<class ItemType>
+int ExerciseLinkedBag<ItemType>::getCurrentSizeRecursively() const {
+  return getCurrentSizeRecursively(0, this->headPtr);
+}
+
+template<class ItemType>
+int ExerciseLinkedBag<ItemType>::getCurrentSizeRecursively(int count, Node<ItemType>* curPtr) const {
+  if (curPtr != nullptr){ 
+    return getCurrentSizeRecursively(count + 1, curPtr->getNext());
+  }
+  return count;
+}
+
+template<class ItemType>
+int ExerciseLinkedBag<ItemType>::getFrequencyOf(const ItemType& anEntry) const {
+  return getFrequencyOf(0, anEntry, this->headPtr);
+}
+
+template<class ItemType>
+int ExerciseLinkedBag<ItemType>::getFrequencyOf(int count, const ItemType& anEntry, Node<ItemType>* curPtr) const {
+  if (curPtr != nullptr) {
+    if (curPtr->getItem() == anEntry) {
+      count++;
+    }
+    return getFrequencyOf(count, anEntry, curPtr->getNext());
+  }
+  else {
+    return count;
+  }
+}
+
+template<class ItemType>
+bool ExerciseLinkedBag<ItemType>::removeRandomEntry() {
+  if (this->isEmpty()) {
+    return false;
+  }
+
+  srand(time(0));
+  int randomIndex = rand() % this->getCurrentSize();
+
+  Node<ItemType>* curPtr = this->headPtr;
+  while (randomIndex > 1) {
+    randomIndex--;
+    curPtr = curPtr->getNext();
+  }
+
+  Node<ItemType>* nodeToDeletePtr = curPtr->getNext();
+  curPtr->setNext(nodeToDeletePtr->getNext());
+
+  nodeToDeletePtr->setNext(nullptr);
+  delete nodeToDeletePtr;
+  nodeToDeletePtr = nullptr;
+
+  return true;
 }

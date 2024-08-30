@@ -1,3 +1,9 @@
 void Exercise1();
 void Exercise2();
 void Exercise3();
+void Exercise4();
+void Exercise5();
+void Exercise6();
+void Exercise7();
+void Exercise8();
+void Exercise9();
