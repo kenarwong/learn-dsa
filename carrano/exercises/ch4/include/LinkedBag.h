@@ -14,14 +14,13 @@ public:
    int getCurrentSize() const override;
    bool isEmpty() const override;
    bool add(const ItemType& newEntry) override;
-   bool addToRear(const ItemType& newEntry);
    bool remove(const ItemType& anEntry) override;
    void clear() override;
    int getFrequencyOf(const ItemType& anEntry) const override;
    bool contains(const ItemType& anEntry) const override;
    std::vector<ItemType> toVector() const override;
 
-private:
+protected:
     Node<ItemType>* headPtr; // Pointer to first node
     Node<ItemType>* tailPtr; // Pointer to last node
     int itemCount; // Current count of bag items
