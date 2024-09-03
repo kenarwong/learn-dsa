@@ -11,6 +11,9 @@ int main() {
   Exercise7();
   Exercise8();
   Exercise9();
+  Exercise10();
+  Exercise11();
+  Exercise12();
 
   return 0;
 }

@@ -1,6 +1,7 @@
 #include "headers.h"
 #include "Node.h"
 #include "ExerciseLinkedBag.h"
+#include "DoublyLinkedBag.h"
 #include <stdlib.h> 
 
 void Exercise1() {
@@ -168,4 +169,151 @@ void Exercise8() {
 void Exercise9() {
   std::cout << "Exercise 9" << std::endl;
   
+  Node<std::string>* nodePtr4 = new Node<std::string>("4", nullptr); 
+  Node<std::string>* nodePtr3 = new Node<std::string>("3", nodePtr4); 
+  Node<std::string>* nodePtr2 = new Node<std::string>("2", nodePtr3); 
+  Node<std::string>* nodePtr1 = new Node<std::string>("1", nodePtr2); 
+  Node<std::string>* nodePtr0 = new Node<std::string>("0", nodePtr1); 
+  Node<std::string>* headPtr = nodePtr0;
+
+  //std::string toDelete = "2";
+  //std::string toDelete = "0";
+  std::string toDelete = "4";
+
+  // Linked list delete
+  bool found = false;
+  Node<std::string>* iPtr = headPtr;
+  while (!found && iPtr != nullptr) {
+    if (iPtr->getItem() == toDelete) {
+      Node<std::string>* nodeToDeletePtr = headPtr;
+      iPtr->setItem(headPtr->getItem());
+      headPtr = headPtr->getNext();
+
+      nodeToDeletePtr->setNext(nullptr);
+      delete nodeToDeletePtr;
+      nodeToDeletePtr = nullptr;
+
+      found = true;
+    }
+    iPtr = iPtr->getNext();
+  }
+
+  iPtr = headPtr;
+  while (iPtr != nullptr) {
+    std::cout << iPtr->getItem() << std::endl;
+    iPtr = iPtr->getNext();
+  }
+
+  // Array delete
+  found = false;
+  int size = 5;
+  std::string replaceValue = "";
+  std::string arr[size] = {"0", "1", "2", "3", "4"};
+
+  int i = size - 1;
+  std::string temp;
+  while (!found && i >= 0) {
+    temp = arr[i];
+    arr[i] = replaceValue;
+    replaceValue = temp;
+  
+    if(temp == toDelete) {
+      found = true;
+      size--;
+    }
+  
+    i--;
+  }
+
+  for (int i = 0; i < size; i++) {
+    std::cout << arr[i] << std::endl;
+  }
+
+  // Clean up
+  while (headPtr != nullptr) {
+    Node<std::string>* nodeToDeletePtr = headPtr;
+    headPtr = headPtr->getNext();
+
+    nodeToDeletePtr->setNext(nullptr);
+    delete nodeToDeletePtr;
+    nodeToDeletePtr = nullptr;
+  }
+
+}
+
+void Exercise10() {
+  std::cout << "Exercise 10" << std::endl;
+
+  DoublyLinkedNode<std::string>* nodePtr0 = new DoublyLinkedNode<std::string>("0");
+  DoublyLinkedNode<std::string>* nodePtr1 = new DoublyLinkedNode<std::string>("1");
+  DoublyLinkedNode<std::string>* nodePtr2 = new DoublyLinkedNode<std::string>("2");
+  DoublyLinkedNode<std::string>* nodePtr3 = new DoublyLinkedNode<std::string>("3");
+
+  nodePtr0->setNext(nodePtr1);
+  nodePtr1->setNext(nodePtr2);
+  nodePtr2->setNext(nodePtr3);
+  nodePtr3->setPrev(nodePtr2);
+  nodePtr2->setPrev(nodePtr1);
+  nodePtr1->setPrev(nodePtr0);
+
+  DoublyLinkedNode<std::string>* curPtr = nodePtr0;
+  while (curPtr != nullptr) {
+    std::cout << curPtr->getItem() << std::endl;
+    curPtr = curPtr->getNext();
+  }
+
+  curPtr = nodePtr3;
+  while (curPtr != nullptr) {
+    std::cout << curPtr->getItem() << std::endl;
+    curPtr = curPtr->getPrev();
+  }
+
+  delete nodePtr0;
+  delete nodePtr1;
+  delete nodePtr2;
+  delete nodePtr3;
+}
+
+void Exercise11() {
+  std::cout << "Exercise 11" << std::endl;
+
+  DoublyLinkedBag<std::string>* bag = new DoublyLinkedBag<std::string>();
+  std::cout << "isEmpty(): " << bag->isEmpty() << std::endl;
+
+  bag->add("Wilson");
+  bag->add("Smith");
+  bag->add("Jones");
+  bag->add("Baker");
+  bag->add("Able");
+  std::cout << "getCurrentSize(): " << bag->getCurrentSize() << std::endl;
+  std::cout << "isEmpty(): " << bag->isEmpty() << std::endl;
+
+  bag->clear();
+  std::cout << "isEmpty(): " << bag->isEmpty() << std::endl;
+
+  delete bag;
+}
+
+void Exercise12() {
+  std::cout << "Exercise 12" << std::endl;
+
+  DoublyLinkedBag<std::string>* bag = new DoublyLinkedBag<std::string>();
+
+  bag->add("Wilson");
+  bag->add("Smith");
+  bag->add("Jones");
+  bag->add("Baker");
+  bag->add("Able");
+  std::cout << "getCurrentSize(): " << bag->getCurrentSize() << std::endl;
+
+  bag->remove("Able");
+  std::cout << "getCurrentSize(): " << bag->getCurrentSize() << std::endl;
+  bag->remove("Wilson");
+  std::cout << "getCurrentSize(): " << bag->getCurrentSize() << std::endl;
+
+  for(auto it : bag->toVector()) {
+    std::cout << it << std::endl;
+  }
+
+  delete bag;
 }
