@@ -4,14 +4,14 @@
 
 int main()
 {
-  //// string tests
-  //testSet();
+  // string tests
+  testSet();
   
-  // unsigned long tests
-  testSet2();
+  //// unsigned long tests
+  //testSet2();
 
-  // PayerSet tests
-  testPayerSet();
+  //// PayerSet tests
+  //testPayerSet();
 
   return 0;
 }
