@@ -6,6 +6,8 @@
 
 void InFixTests()
 {
+  std::cout << "InFix tests" << std::endl;
+
   char vars[] = {'a', 'e', 'i', 'o', 'u', 'y', '#'};
   int vals[] = {3, -9, 6, 2, 4, 1};
   Map m;
@@ -42,5 +44,5 @@ void InFixTests()
          pf == "a" && answer == 3);
   assert(calc.evaluate("((a))", m, pf, answer) == 0 &&
          pf == "a" && answer == 3);
-  std::cout << "Passed all tests" << std::endl;
+  std::cout << "Passed all tests!" << std::endl;
 }

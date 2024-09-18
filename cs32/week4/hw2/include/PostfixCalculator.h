@@ -33,6 +33,11 @@ private:
 
     bool isdigit(std::string s) {
       if (s[0] == '-') {
+        // Negative number
+        if (s.size() == 1) {
+          // Negative operator
+          return false;
+        }
         s = s.substr(1);
       }
       for(auto c : s) {

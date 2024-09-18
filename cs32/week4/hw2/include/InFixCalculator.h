@@ -27,8 +27,10 @@ public:
 
 private:
   std::string inFixToPostFix(const std::string& inFixExpression) const;
-  bool validateSyntax(const std::string& inFixExpression) const;
+  bool validateSyntax(const std::string& inFixExpression);
+  bool validateSyntax(const std::string& inFixExpression, int& index, int& parenthesisCount);
   void removeSpaces(std::string& expression) const;
+  std::string removeSpaces(const std::string& expression) const;
 
   bool isoperand(const char& c) const {
     // Lower case characters only
@@ -95,13 +97,27 @@ inline int InFixCalculator::evaluate(std::string infix, Map& values, std::string
   }
 
   // check that all operands are in values map
+  int operatorCount = 0;
   for (size_t i = 0; i < infix.size(); i++) {
     if (isoperand(infix[i]) && !values.contains(infix[i])) {
+      // Missing operand value
+      
       // postfix changed
       removeSpaces(postfix);
       // result unchanged
       return 2;
     }
+
+    operatorCount++;
+  }
+
+  // If only one operand, do not pass to evaluatePostfixExpression
+  // evaluatePostfixExpression only handles operations
+  // Just return value
+  if (operatorCount == 1) {
+    result = values.get(postfix[0]);
+    removeSpaces(postfix);
+    return 0;
   }
 
   // Create postfix expression with values
@@ -117,6 +133,7 @@ inline int InFixCalculator::evaluate(std::string infix, Map& values, std::string
   }
   postFixWithValues.pop_back();
 
+  // Pass to PostfixCalculator
   PostfixCalculator calc;
   try {
     result = calc.evaluatePostfixExpression(postFixWithValues);
@@ -212,41 +229,162 @@ inline std::string InFixCalculator::inFixToPostFix(const std::string& inFixExpre
   return postFix;
 }
 
-inline bool InFixCalculator::validateSyntax(const std::string& inFixExpression) const {
-  if (inFixExpression == "") {
+inline bool InFixCalculator::validateSyntax(const std::string& inFixExpression) {
+  // Initial check
+  if (removeSpaces(inFixExpression) == "") {
     return false;
   }
 
+  int index = 0;
   int parenthesisCount = 0;
+  return validateSyntax(inFixExpression, index, parenthesisCount);
+}
 
-  for(auto it = inFixExpression.begin(); it != inFixExpression.end(); ++it) {
-    if (!isoperand(*it) && !isoperator(*it) && *it != '(' && *it != ')' && !iswhitespace(*it)) {
+inline bool InFixCalculator::validateSyntax(const std::string& inFixExpression, int& index, int& parenthesisCount) {
+  // Syntax Logic
+  // Initial operand/expression
+  // If operand/expression is followed by operator, then an operand or a valid inner expression must follow
+    // If true, then everything becomes initial operand
+
+  // Truth Table 
+  // OPAND OPTOR OPAND OPTOR OPAND OUT
+  // 0     x     x     x     x     0
+  // 1     0     0     0     0     1
+  // 1     0     1     x     x     0
+  // 1     1     0     x     x     0
+  // 1     1     1     0     0     1
+  // 1     1     1     0     1     0
+  // 1     1     1     1     0     0
+  // 1     1     1     1     1     1
+  //
+  // OPAND XNOR(OPTOR,OPAND) OUT
+  // 0     x                 0
+  // 1     0                 0
+  // 1     1                 1
+
+  // Evaluate expression
+  bool opand1 = false, optor = false, opand2 = false;
+
+  // Helper function to determine if expression is valid
+  auto evaluateOperation = [&opand1, &optor, &opand2]() -> bool {
+    return opand1 && !(optor ^ opand2);
+  };
+
+  // Helper function to set appropriate operand flag
+  auto setOperandFlags = [&opand1, &optor, &opand2, &evaluateOperation]() -> bool {
+    // Base case
+    if(!opand1 && !optor && !opand2) {
+      // This is first operand
+      opand1 = true;
+      return true;
+    } else if(opand1 && optor && !opand2) {
+      // Second case
+      // If second operand is not already set
+      // This is the second operand
+      opand2 = true;
+
+      // Evaluate expression
+      if (!evaluateOperation()) {
+        return false;
+      } else {
+        // Reset values
+        opand1 = true;
+        optor = false;
+        opand2 = false;
+        return true;
+      }
+    }
+
+    // An operand cannot follow an operand
+    return false;
+  };
+
+  while(index < inFixExpression.length()) {
+    char it = inFixExpression[index];
+
+    // Check for invalid characters
+    // Allow whitespace (won't do anything with it)
+    if (!isoperand(it) && !isoperator(it) && it != '(' && it != ')' && !iswhitespace(it)) {
       return false;
     }
 
-    if (*it == '(') {
-      parenthesisCount++;
+    if (isoperand(it)) {
+        // Set appropriate operand flag
+        // Check if valid
+        if (!setOperandFlags()){
+          return false;
+        }
+    } else if (isoperator(it)) {
+        // Check opand1
+        if (!opand1) {
+          // Operator must follow an operand
+          return false;
+        }
 
-      // Recursive check for valid syntax within each parenthesis group
+        optor = true;
+    } else if (it == '(') {
+        parenthesisCount++; // Increment parenthesisCount
+        //int startIndex = index; // Save start index
+
+        // Recursive call starting from after the parenthesis
+        index++;
+        bool result = validateSyntax(inFixExpression, index, parenthesisCount);
+
+        // Index after returned index is the end index
+        // Everything between start and end index is a valid expression (equivalent to an operand, OPAND)
+
+        // If result is not valid then abort
+        if (!result) {
+          return false;
+        }
+
+        // If result is valid, then we can treat the valid expression as an operand
+        // Set appropriate operand flag
+        // Check if valid
+        if (!setOperandFlags()){
+          return false;
+        }
+    } else if (it == ')') {
+        parenthesisCount--; // Decrement parenthesisCount
+
+        // Parentheses not balanced
+        if (parenthesisCount < 0) {
+          return false;
+        }
+
+        // Evaluate expression and return from recursive call
+        return evaluateOperation();
+    } else {
+        // Ignore whitespace
     }
 
-    if (*it == ')') {
-      parenthesisCount--;
-    }
+    index++;
   }
+  // Reached end of expression
 
-  // Check for balanced parenthesis
-  if (parenthesisCount != 0)
-  {
+  // Parentheses not balanced
+  // Also means that an expression is not closed and we are still in a recursive call
+  if (parenthesisCount != 0) {
     return false;
   }
 
-  return true;
+  // Final evaluation of entire expression
+  return evaluateOperation();
 }
 
 inline void InFixCalculator::removeSpaces(std::string& expression) const {
   // Remove spaces
   expression.erase(std::remove(expression.begin(), expression.end(), ' '), expression.end());
+}
+
+std::string InFixCalculator::removeSpaces(const std::string& expression) const {
+    std::string result;
+    for (char c : expression) {
+        if (!isspace(c)) {
+            result += c;
+        }
+    }
+    return result;
 }
 
 #endif
