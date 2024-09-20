@@ -30,6 +30,7 @@ void Exercise1() {
 
   Node<int>* start = head;
 
+  // O(1) space, O(n^2) time
   while (start != nullptr) {
     Node<int>* end = start;
 
