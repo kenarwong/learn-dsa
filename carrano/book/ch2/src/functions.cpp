@@ -122,7 +122,9 @@ int binarySearch(const std::string *searchArray, size_t length, std::string valu
 
 int kSmallRecursion(int k, int *anArray, int first, int last) {
   // choose last as pivotIndex
-  // choose value as pivot value
+  // last is chosen because it is convenient when partitioning
+  // the assumption is that the array is shuffled, so last is sufficiently random
+  // choose value at pivot value
   int pivotIndex = last;
   int p = anArray[pivotIndex];
 
@@ -135,8 +137,9 @@ int kSmallRecursion(int k, int *anArray, int first, int last) {
     }
     i++;
   }
-  // Update pivotIndex
   std::swap(anArray[r], anArray[pivotIndex]);
+
+  // Update pivotIndex
   pivotIndex = r;
 
   for (auto it = anArray + first; it != anArray + last + 1; ++it) {

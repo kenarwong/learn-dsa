@@ -15,4 +15,6 @@ int binarySearch(const std::string *searchArray, size_t length, std::string valu
 
 int kSmall(int k, int *anArray, size_t length);
 
+void TowersOfHanoi(int numberOfDisks);
+
 #endif

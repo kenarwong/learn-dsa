@@ -54,7 +54,7 @@ int main()
   }
 
   // kth smallest
-  int k = 14;
+  int k = 26;
   //int testArray[5] = {1,2,3,4,5};
   //cout << "The " << k << "th smallest value is " << kSmall(k, testArray, 5) << endl;
 
@@ -64,6 +64,10 @@ int main()
 
   cout << "kSmall(" << k << ", testArray, 30)" << endl;
   cout << "The " << k << "th smallest value is " << result << endl;
+
+  // Towers of Hanoi
+  int numberOfDisks = 6;
+  TowersOfHanoi(numberOfDisks);
   
   return 0;
 } // end main
