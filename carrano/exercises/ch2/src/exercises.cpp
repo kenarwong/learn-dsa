@@ -131,3 +131,100 @@ int getValue(int a, int b, int n)
   std::cout << "Leave: a = " << a << " b = " << b << std::endl;
   return returnValue;
 }
+
+int search(int first, int last, int n)
+{
+  int returnValue = 0;
+  std::cout << "Enter: first = " << first << " last = " << last << std::endl;
+  int mid = (first + last) / 2;
+  if ((mid * mid <= n) && (n < (mid + 1) * (mid + 1)))
+    returnValue = mid;
+  else if (mid * mid > n)
+    returnValue = search(first, mid - 1, n);
+  else
+    returnValue = search(mid + 1, last, n);
+  std::cout << "Leave: first = " << first << " last = " << last << std::endl;
+  return returnValue;
+} // end search
+
+int mystery(int n)
+{
+  return search(1, n, n);
+} // end mystery
+
+void displayAsOctal(int n) {
+  if (n == 0) {
+    return;
+  }
+
+  displayAsOctal(n / 8);
+
+  // Most-significant digit is displayed last
+  std::cout << n % 8;
+}
+
+/** @pre n >= 0. */
+int f(int n)
+{
+  if (n % 2 == 1 && n >= 3) {
+    return 0;
+  }
+
+  std::cout << "Function entered with n = " << n << std::endl;
+  switch (n)
+  {
+    case 0: case 1: case 2:
+      return n + 1;
+    default:
+      return f(n-2) * f(n-4);
+  } // end switch
+}
+
+void recurseByValue(int x, int y)
+{
+  if (y > 0)
+  {
+    x++;
+    y = y - 1;
+    std::cout << x << " " << y << std::endl;
+    recurseByValue(x, y);
+    std::cout << x << " " << y << std::endl;
+  } // end if
+}
+
+void recurseByReference(int& x, int y)
+{
+  if (y > 0)
+  {
+    x++;
+    y = y - 1;
+    std::cout << x << " " << y << std::endl;
+    recurseByReference(x, y);
+    std::cout << x << " " << y << std::endl;
+  } // end if
+}
+
+int binarySearchRecursion(int array[], int search, int first, int last) {
+  if (first > last) {
+    return -1;
+  }
+
+  int mid = first + (last - first)/2;
+  int midTerm = array[mid];
+
+  if (search == midTerm) {
+    return mid;
+  } else if (search < midTerm) {
+    return binarySearchRecursion(array, search, first, mid-1);
+  } else {
+    return binarySearchRecursion(array, search, mid+1, last);
+  }
+}
+
+int binarySearch(int array[], int search, int n) {
+  if (n > 0) {
+    return binarySearchRecursion(array, search, 0, n-1);
+  }
+  
+  return -1;
+}

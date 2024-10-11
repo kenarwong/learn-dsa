@@ -21,4 +21,17 @@ void writeLine(char c, int n);
 void writeBlock(char c, int n, int m);
 
 int getValue(int a, int b, int n);
+
+int search(int first, int last, int n);
+int mystery(int n);
+
+void displayAsOctal(int n);
+
+int f(int n);
+
+void recurseByValue(int x, int y);
+void recurseByReference(int& x, int y);
+
+int binarySearch(int array[], int search, int n);
+
 #endif
