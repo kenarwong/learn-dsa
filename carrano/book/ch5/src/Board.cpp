@@ -61,7 +61,9 @@ bool Board::placeQueens(Queen *queenPtr) {
 }
 
 void Board::removeQueen() {
+  Queen *q = queens.back();
   queens.pop_back();
+  delete q;
 }
 
 void Board::setQueen(Queen *queenPtr) {
