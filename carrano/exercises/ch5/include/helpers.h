@@ -5,4 +5,7 @@
 
 bool iswhitespace(std::string str);
 
+bool isoperator(char c);
+int evaluateOperation(char op, char operand1, char operand2);
+
 #endif
