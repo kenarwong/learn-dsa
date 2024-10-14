@@ -22,10 +22,10 @@ FigureSkating::FigureSkating(std::string name) : Sport(name) {
 }
 
 FigureSkating::~FigureSkating() {
-  std::cout << "Destroying the " << getObjectName() << " object named " << getName() << "." << std::endl;
+  std::cout << "Destroying the " << getObjectName() << " object named " << name() << "." << std::endl;
 }
 
-bool FigureSkating::getObjectName() const {
+std::string FigureSkating::getObjectName() const {
   return "FigureSkating";
 }
 

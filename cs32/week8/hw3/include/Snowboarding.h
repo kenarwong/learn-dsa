@@ -22,10 +22,10 @@ Snowboarding::Snowboarding(std::string name) : Sport(name) {
 }
 
 Snowboarding::~Snowboarding() {
-  std::cout << "Destroying the " << getObjectName() << " object named " << getName() << "." << std::endl;
+  std::cout << "Destroying the " << getObjectName() << " object named " << name() << "." << std::endl;
 }
 
-bool Snowboarding::getObjectName() const {
+std::string Snowboarding::getObjectName() const {
   return "Snowboarding";
 }
 

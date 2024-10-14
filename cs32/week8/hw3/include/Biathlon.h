@@ -23,10 +23,10 @@ Biathlon::Biathlon(std::string name, float distance) : Sport(name) {
 }
 
 Biathlon::~Biathlon() {
-  std::cout << "Destroying the " << getObjectName() << " object named " << getName() <<  ", distance " << m_distance << " km." << std::endl;
+  std::cout << "Destroying the " << getObjectName() << " object named " << name() <<  ", distance " << m_distance << " km." << std::endl;
 }
 
-bool Biathlon::getObjectName() const {
+std::string Biathlon::getObjectName() const {
   return "Biathlon";
 }
 
