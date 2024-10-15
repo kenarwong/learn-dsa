@@ -13,21 +13,21 @@ void printArrayInOrder(const double a[], int n)
 
 int gcd(int m, int n)
 {
-    if(m == 0) {
-        return n;
-    }
+  if (m == n)
+  {
+    return m;
+  }
 
-    if(n == 0) {
-        return m;
-    }
+  n = n - m;
 
-    if(m > n) {
-        return gcd(n, m-n);
-    }
-
-    if(n < m) {
-        return gcd(n, n-m);
-    }
+  if (m > n)
+  {
+    return gcd(n, m);
+  }
+  else
+  {
+    return gcd(m, n);
+  }
 }
 
 4.
@@ -37,7 +37,8 @@ int powerOfTwo(int x){
         return 1;
     }
 
-    return 2 * powerOfTwo(x-1);
+    // 2^(x-1) + 2^(x-1) = 2^1 * 2^(x-1) = 2^(x)
+    return powerOfTwo(x-1) + powerOfTwo(x-1);
 }
 
 5.
