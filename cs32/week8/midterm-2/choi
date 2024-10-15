@@ -1,0 +1,126 @@
+2.
+void printArrayInOrder(const double a[], int n)
+{
+    if (n == 0)
+        return;
+
+    printArrayInOrder(a+1, n-1);
+    cout << a[0] << endl;
+}
+
+
+3.
+
+int gcd(int m, int n)
+{
+    if(m == 0) {
+        return n;
+    }
+
+    if(n == 0) {
+        return m;
+    }
+
+    if(m > n) {
+        return gcd(n, m-n);
+    }
+
+    if(n < m) {
+        return gcd(n, n-m);
+    }
+}
+
+4.
+
+int powerOfTwo(int x){
+    if (x == 0) {
+        return 1;
+    }
+
+    return 2 * powerOfTwo(x-1);
+}
+
+5.
+
+A *b1 = new B;          // Orange, m_a(Apple)
+B *b2 = new B;          // Orange, m_a(Apple)
+A *b3 = new B("Apple"); // Apple, m_a(Apple)
+b1->message();          // Orange
+b2->message();          // Apple
+b3->message();          // Apple
+delete b1;              // delete m_a (Apple), Orange
+delete b2;              // delete m_a (Apple), Orange
+delete b3;              // delete m_a (Apple), Apple
+
+// 6x Apple
+// 3x Orange
+
+virtual void message() const;
+
+// for any classes instantiated as B
+// B's message() will override A's virtual methods
+
+A *b1 = new B;          // Orange, m_a(Apple)
+B *b2 = new B;          // Orange, m_a(Apple)
+A *b3 = new B("Apple"); // Apple, m_a(Apple)
+b1->message();          // m_a.message() Apple
+b2->message();          // m_a.message() Apple
+b3->message();          // m_a.message() Apple
+delete b1;              // delete m_a (Apple), ~A() Orange
+delete b2;              // delete m_a (Apple), ~A() Orange
+delete b3;              // delete m_a (Apple), ~A() Apple
+
+// 7x Apple
+// 2x Orange
+
+6.
+
+#include <stack>
+
+using namespace std;
+
+bool balanced(const string &exp) {
+    std::stack<int> paren;
+    std::stack<int> curly;
+    std::stack<int> square;
+
+    for (int i = 0; i < exp.length(); i++) {
+        switch (exp[i]) {
+            case '(':
+                paren.push(i);
+                break;
+            case ')':
+                if (paren.size() != 0) {
+                  paren.pop();
+                } else {
+                  return false;
+                }
+
+                break;
+            case '{':
+                curly.push(i);
+                break;
+            case '}':
+                if (curly.size() != 0) {
+                  curly.pop();
+                } else {
+                  return false;
+                }
+
+                break;
+            case '[':
+                square.push(i);
+                break;
+            case ']':
+                if (square.size() != 0) {
+                  square.pop();
+                } else {
+                  return false;
+                }
+
+                break;
+        }
+    }
+
+    return paren.size() == 0 && curly.size() == 0 && square.size() == 0;
+}
