@@ -1,0 +1,314 @@
+1.
+
+#include <queue>
+#include <stack>
+
+bool isQueue(const std::vector<int>& seq1, const std::vector<int>& seq2)
+{
+    std::queue<int> q;
+
+    for (auto it = seq1.begin(); it != seq1.end(); ++it) {
+        q.push(*it);
+    }
+
+    for (auto it = seq2.begin(); it != seq2.end(); ++it) {
+        if (*it != q.front()) {
+            return false;
+        }
+
+        q.pop();
+    }
+
+    return true;
+}
+
+bool isStack(const std::vector<int>& seq1, const std::vector<int>& seq2)
+{
+    std::stack<int> s;
+
+    for (auto it = seq1.begin(); it != seq1.end(); ++it) {
+        s.push(*it);
+    }
+
+    for (auto it = seq2.begin(); it != seq2.end(); ++it) {
+        if (*it != s.top()) {
+            return false;
+        }
+
+        s.pop();
+    }
+
+    return true;
+}
+
+int main()
+{
+    int numberOfValues;
+    while( cin >> numberOfValues) // leave loop if there is no next test case
+    {
+        vector<int> v1, v2;
+        for (int i = 0; i < numberOfValues; i++) {
+            int value;
+            cin >> value;
+            v1.push_back(value);
+        }
+        for (int i = 0; i < numberOfValues; i++) {
+            int value;
+            cin >> value;
+            v2.push_back(value);
+        }
+        bool s = isStack(v1,v2);
+        bool q = isQueue(v1,v2);
+        if (s) {
+            if (q)
+                cout << "Either a Stack or a Queue!" << endl;
+            else
+                cout << "This is a Stack!" << endl;
+        } else {
+            if (q)
+                cout << "This is a Queue!" << endl;
+            else
+                cout << "Neither a Stack or a Queue!" << endl;
+        }
+    }
+}
+
+2.
+
+#include "headers.h"
+#include <iostream>
+using namespace std;
+
+class LinkedList
+{
+public:
+    LinkedList(): head(nullptr) {}  // append value to the list
+    ~LinkedList();
+    void append(int value);
+    void print() const;             // show the items in the list opposite order
+    void printReverse() const;      // show the items in the list in the
+    void reverse();                 // change list so items are in the opposite order
+    int sum() const;                // return the sum of the values in the list
+
+private:
+    struct Node
+    {
+        int num;
+        Node* next;
+    };
+
+    Node* head; // this is the only data member, do not add any others
+
+    void printReverseHelper(const Node* p) const;
+    Node* reverseHelper (Node* current, Node* previous);
+    int sumHelper(const Node* p) const;
+    void removeNodes(Node* p);
+};
+
+void Problem2() {
+    std::cout << "Problem 2" << std::endl;
+
+    LinkedList list;
+    cout << list.sum() << endl;         // writes 0
+    int values[4] = {30, 10, 40, 20};
+    for (int i = 0; i < 4; i++)
+        list.append(values[i]);
+    list.print();                       // writes 30 10 40 20
+    cout << list.sum() << endl;        // writes 100
+    list.printReverse();                // writes 20 40 10 30
+    list.print();                       // writes 30 10 40 20 (list wasn't changed)
+    list.reverse();                     // this changes the list
+    list.print();                       // writes 20 40 10 30
+}
+
+void LinkedList::append(int value)
+{
+  Node *current = new Node;
+  current->num = value;
+  current->next = nullptr;
+  if (head == nullptr)
+  {
+    head = current;
+  }
+  else
+  {
+    Node *ptr = head;
+    while (ptr->next != nullptr) {
+      ptr = ptr->next;
+    }
+    ptr->next = current;
+  }
+}
+
+void LinkedList::print() const
+{
+    for (const Node* ptr = head; ptr != nullptr; ptr = ptr->next)
+        cout << ptr->num << " ";
+    cout << endl;
+}
+
+void LinkedList::printReverse() const
+{
+    printReverseHelper(head);
+    cout << endl;
+}
+
+void LinkedList::printReverseHelper(const Node* p) const
+{
+    if(p == nullptr)
+        return;
+
+    printReverseHelper(p->next);
+
+    cout << p->num << " ";
+}
+
+void LinkedList::reverse()
+{
+    head = reverseHelper(head, nullptr);
+}
+
+LinkedList::Node* LinkedList::reverseHelper(Node* current, Node* previous)
+{
+    if(current == nullptr)
+        return previous; // will become new head
+    Node* last_node = reverseHelper(current->next, current);
+
+    current->next = previous;
+    return last_node; // bubble head up
+}
+
+int LinkedList::sum() const
+{
+    return sumHelper(head);
+}
+
+int LinkedList::sumHelper(const LinkedList::Node* p) const
+{
+    if (p == nullptr) {
+        return 0;
+    }
+
+    return p->num + sumHelper(p->next);
+}
+
+LinkedList::~LinkedList()
+{
+    removeNodes(head);
+}
+
+void LinkedList::removeNodes(Node* p)
+{
+    if (p == nullptr) {
+        return;
+    }
+
+    Node* toDelete = p;
+    p = p->next;
+    delete toDelete;
+
+    removeNodes(p);
+}
+
+3.
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Base
+{
+public:
+  Base(string nm) : name(nm) {}
+  string getName() const { return name; }
+  virtual void printName() const { cout << "Base" << name << endl; }
+
+private:
+  string name;
+};
+
+class Derived : public Base
+{
+public:
+  Derived(string nm) : Base("Doctor " + nm) {}
+  virtual void printName() { cout << "Derived " << getName() << endl; }
+};
+
+void printAll(const vector<Base *> &vec)
+{
+  for (int i = 0; i != vec.size(); i++) // fill in the body of the loop
+  {
+    vec[i]->printName();
+  }
+};
+
+void Problem3()
+{
+  vector<Base *> v;
+  v.push_back(new Base("Homer Simpson"));
+  v.push_back(new Derived("Beverly Crusher"));
+  v.push_back(new Derived("Who"));
+  printAll(v);
+  for (int i = 0; i < 3; i++)
+    delete v[i];
+}
+
+4.
+
+#include <iostream>
+#include <algorithm> // defines int min(int a, int b); returns the minimum of a and b
+using namespace std;
+#include <iostream>
+#include <algorithm> // defines int min(int a, int b); returns the minimum of a and b
+using namespace std;
+
+bool isDoable(int jug1, int cap1, int jug2, int cap2, int target, int depth);
+
+int main()
+{
+    int jug1_capacity, jug2_capacity, target;
+    cin >> jug1_capacity >> jug2_capacity >> target;
+    if (isDoable(0, jug1_capacity, 0, jug2_capacity, target, 0))
+        cout << "This can be solved!" << endl;
+    else
+        cout << "This cannot be solved within 9 steps!" << endl;
+}
+
+bool isDoable(int jug1, int cap1, int jug2, int cap2, int target, int depth)
+{
+    if (jug1 == target || jug2 == target)
+        return true;
+    if (depth == 9) // our limit on the depth of a recursion
+        return false;
+
+    // Can you solve it by filling A first?
+    if (isDoable(cap1, cap1, jug2, cap2, target, depth+1))
+        return true;
+
+    // Can you solve it by filling B first?
+    if (isDoable(jug1, cap1, cap2, cap2, target, depth+1))
+        return true;
+
+    // Can you solve it by emptying A first?
+    if (isDoable(0, cap1, jug2, cap2, target, depth+1))
+        return true;
+
+    // Can you solve it by emptying B first?
+    if (isDoable(jug1, cap1, 0, cap2, target, depth+1))
+        return true;
+
+    // Can you solve it by pouring from B to A first?
+    int amt = min(cap1-jug1, jug2); // unused capacity in A, or all of what's in B
+    if (isDoable(jug1 + amt, cap1, jug2 - amt, cap2, target, depth+1))
+        return true;
+
+    // Can you solve it by pouring from A to B first? [fill in code below]
+    int amt = min(jug1, cap2-jug2); // unused capacity in B, or all of what's in A
+    if (isDoable(jug1 - amt, cap1, jug2 + amt, cap2, target, depth+1))
+        return true;
+
+    // Nothing leads to a solution
+    return false;
+
+}
