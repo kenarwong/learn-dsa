@@ -1,0 +1,169 @@
+1.
+
+struct Node {
+    int val;
+    Node *next1, *next2;
+};
+
+int find_max(Node *p) {
+    if (p == nullptr) {
+        return -1;
+    }
+
+    int val1 = find_max(p->next1);
+    int val2 = find_max(p->next2);
+
+    if (p->val >= val1 && p->val >= val2) {
+        return p->val;
+    } else if (val1 >= p->val && val1 >= val2) {
+        return val1;
+    } else {
+        return val2;
+    }
+}
+
+2.
+
+#include <iostream>
+
+class SeaAnimal
+{
+public:
+    SeaAnimal(float weight);
+
+    virtual void makeNoise();
+
+    float weight();
+    void addWeight(float weight);
+
+    virtual void eat(SeaAnimal* p);
+private:
+    float m_weight;
+};
+
+SeaAnimal::SeaAnimal(float weight) : m_weight(weight) {}
+
+void SeaAnimal::makeNoise() {
+    return;
+}
+
+float SeaAnimal::weight() {
+    return m_weight;
+}
+
+void SeaAnimal::addWeight(float weight) {
+    m_weight += weight;
+}
+
+void SeaAnimal::eat(SeaAnimal* p) {
+    addWeight(p->weight());
+    delete p;
+    return;
+}
+
+class Otter : public SeaAnimal
+{
+public:
+    Otter(float weight);
+    void makeNoise();
+};
+
+Otter::Otter(float weight) : SeaAnimal(weight) {}
+
+void Otter::makeNoise() {
+    std::cout << "Bark" << std::endl;
+}
+
+class Squid : public SeaAnimal
+{
+public:
+    Squid(float weight);
+    void makeNoise();
+};
+
+Squid::Squid(float weight) : SeaAnimal(weight) {}
+
+void Squid::makeNoise() {
+    std::cout << "Squeak" << std::endl;
+}
+
+class GiantSquid : public Squid
+{
+public:
+    GiantSquid();
+    void eat(SeaAnimal* p);
+};
+
+GiantSquid::GiantSquid() : Squid(1000) {}
+
+void GiantSquid::eat(SeaAnimal* p) {
+    //SeaAnimal::eat(p);
+
+    delete p;
+    std::cout << "Burp" << std::endl;
+
+    return;
+}
+
+3.
+
+#include <stack>
+
+bool Balanced(const std::string exp, int& maxDepth) {
+  std::stack<char> paren;
+  std::stack<char> curly;
+  std::stack<char> square;
+
+  int depth = 0;
+  for (auto it = exp.begin(); it != exp.end(); it++) {
+    switch (*it) {
+      case '(':
+        paren.push(*it);
+        depth++;
+        break;
+      case '{':
+        curly.push(*it);
+        depth++;
+        break;
+      case '[':
+        square.push(*it);
+        depth++;
+        break;
+      case ')':
+        if (paren.empty()) {
+          maxDepth = 0;
+          return false;
+        }
+        paren.pop();
+        depth--;
+        break;
+      case '}':
+        if (curly.empty()) {
+          maxDepth = 0;
+          return false;
+        }
+        curly.pop();
+        depth--;
+        break;
+      case ']':
+        if (square.empty()) {
+          maxDepth = 0;
+          return false;
+        }
+        square.pop();
+        depth--;
+        break;
+    }
+
+    if (depth > maxDepth) {
+      maxDepth = depth;
+    }
+  }
+
+  if (paren.empty() && curly.empty() && square.empty()) {
+    return true;
+  }
+
+  maxDepth = 0;
+  return false;
+}
