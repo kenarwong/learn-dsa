@@ -55,6 +55,7 @@
       "snowboarding": "c",
       "list": "cpp",
       "chrono": "cpp",
-      "ratio": "cpp"
+      "ratio": "cpp",
+      "problem6": "cpp"
     }
 }

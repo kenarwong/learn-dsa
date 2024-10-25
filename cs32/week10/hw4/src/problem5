@@ -1,0 +1,47 @@
+// a) O(N^3)
+// const int N = some value;
+// bool isFriend[N][N];
+// ...
+// int numMutualFriends[N][N];
+// for (int i = 0; i < N; i++)                                             // N 
+// {
+//     numMutualFriends[i][i] = -1;  // the concept of mutual friend
+// 			                            // makes no sense in this case
+//     for (int j = 0; j < N; j++)                                         // N^2
+//     {
+//         if (i == j)
+//             continue;
+//         numMutualFriends[i][j] = 0;
+//         for (int k = 0; k < N; k++)                                     // N^3 
+//         {
+//             if (k == i  ||  k == j)
+//                 continue;
+// 	          if (isFriend[i][k]  &&  isFriend[k][j])
+//              	  numMutualFriends[i][j]++;
+//         }
+//     }
+// }
+
+
+// b) O(N^3)
+// const int N = some value;
+// bool isFriend[N][N];
+// ...
+// int numMutualFriends[N][N];
+// for (int i = 0; i < N; i++)
+// {
+//     numMutualFriends[i][i] = -1;  // the concept of mutual friend
+// 			                            // makes no sense in this case
+//     for (int j = 0; j < i; j++)   // loop limit is now i, not N
+//     {
+//         numMutualFriends[i][j] = 0;                                     // N(N+1)/2
+//         for (int k = 0; k < N; k++)
+//         {
+//             if (k == i  ||  k == j)                                     // N * N(N+1)/2 ~= N^3
+//                 continue;
+// 	          if (isFriend[i][k]  &&  isFriend[k][j])
+//         	    numMutualFriends[i][j]++;
+//         }
+//         numMutualFriends[j][i] = numMutualFriends[i][j];
+//     }
+// }

@@ -1,0 +1,101 @@
+// a) Worst case: N^2.
+
+// 1. There are no duplicates, so N inserts.
+// 2. All numbers in the first set are smaller than the to-be result set, so
+// findFirstAtMost must traverse through the entire list of the first set.
+
+
+// void unite(const Set& set1, const Set& set2, Set& result)
+// {
+    // const Set* sp = &set2;
+    // if (&result == &set1)
+    // {
+        // if (&result == &set2)
+                // return;
+    // }
+    // else if (&result == &set2)
+        // sp = &set1;
+    // else
+    // {
+        // result = set1;
+        // if (&set1 == &set2)
+            // return;
+    // }
+    // for (int k = 0; k < sp->size(); k++)
+    // {
+        // ItemType v;
+        // sp->get(k, v);
+        // result.insert(v);
+    // }
+// }
+
+// b) Worst case: O(N*logN)
+// 
+// The sort is N*logN
+// The loop only goes to 2N, but only N items are inserted.
+// 
+// void Set::unite(const Set& set1, const Set& set2)
+// {
+//     vector<ItemType> v;
+// 
+//       // copy all items into v;
+//     for (Node* p1 = set1.m_head->m_next; p1 != set1.m_head; p1 = p1->m_next)
+//         v.push_back(p1->m_value);
+//     for (Node* p2 = set2.m_head->m_next; p2 != set2.m_head; p2 = p2->m_next)
+//         v.push_back(p2->m_value);
+// 
+//       // sort v using an O(N log N) algorithm
+//     sort(v.begin(), v.end());                                         // N*logN
+// 
+//       // delete result nodes (other than the dummy node)
+//     while (m_head->m_next != m_head)
+//         doErase(m_head->m_next);
+// 
+//       // copy unique items from v into result
+//     for (size_t k = 0; k < v.size(); k++)                             
+//     {
+//         if (k == 0  ||  v[k] != v[k-1])  // add non-duplicates
+//             insertBefore(m_head->m_next, v[k]);                       // N
+//     }
+// 
+//       // v is destroyed when function returns
+// }
+
+// c) Worst case: O(N)
+// 
+// Nodes are never visited more than once
+// 
+// void Set::unite(const Set& set1, const Set& set2)
+// {
+//     const Set* sp = &set2;
+//     if (this == &set1)
+//     {
+//         if (this == &set2)
+//                 return;
+//     }
+//     else if (this == &set2)
+//         sp = &set1;
+//     else
+//     {
+//         *this = set1;
+//         if (&set1 == &set2)
+//             return;
+//     }
+//     Node* p1 = m_head->m_next;
+//     Node* p2 = sp->m_head->m_next;
+//     while (p1 != m_head  &&  p2 != sp->m_head)                
+//     {
+//         if (p1->m_value > p2->m_value)
+//             p1 = p1->m_next;
+//         else
+//         {
+//             if (p1->m_value < p2->m_value)
+//                 insertBefore(p1, p2->m_value);
+//             else
+//                 p1 = p1->m_next;
+//             p2 = p2->m_next;
+//         }
+//     }
+//     for ( ; p2 != sp->m_head; p2 = p2->m_next)
+//         insertBefore(m_head, p2->m_value);
+// }

@@ -98,16 +98,21 @@ bool compareStudent(const Student& lhs, const Student& rhs)
     return lhs.id < rhs.id;
 }
 
+bool operator>(const Student& lhs, const Student& rhs) {
+  return compareStudent(lhs, rhs);
+}
+
 inline
 bool compareStudentPtr(const Student* lhs, const Student* rhs)
 {
     // TODO: You implement this.  Using the same criteria as compareStudent,
     //       compare two Students POINTED TO by lhs and rhs.  Think about
     //       how you can do it in one line by calling compareStudent.
+    return compareStudent(*lhs, *rhs);
 
     // Just so this will compile for now, we'll pretend every comparison
     // results in a tie, so there's no preferred ordering.
-    return false;  // Delete this line and write your code instead
+    //return false;  // Delete this line and write your code instead
 }
 
 void insertion_sort(vector<Student>& s, bool comp(const Student&, const Student&))
@@ -128,8 +133,20 @@ void insertion_sort(vector<Student>& s, bool comp(const Student&, const Student&
 
     // Note that if comp(x,y) is true, it means x must end up before y in the
     // final ordering.
-    if (s.size() == 2  &&  comp(s[1], s[0]))
-        swap(s[0], s[1]);
+    //if (s.size() == 2  &&  comp(s[1], s[0]))
+    //    swap(s[0], s[1]);
+    
+	  for (int unsorted = 1; unsorted < s.size(); unsorted++)
+	  {
+	      Student nextItem = s[unsorted];
+	      int loc = unsorted;
+	      while (loc > 0 && s[loc-1] > nextItem)
+		    {
+		        s[loc] = s[loc-1];
+		        loc--;
+		    }
+	      s[loc] = nextItem;
+	  }
 }
 
   // Report the results of a timing test
@@ -264,13 +281,25 @@ void sortUsingPtrs(vector<Student>& students, bool comp(const Student*, const St
 
       // TODO:  Create a vector of Student pointers, and set each pointer
       //        to point to the corresponding Student in auxStudents.
+      vector<Student*> auxStudentPtrs;
+      for (auto& student : auxStudents) {
+          auxStudentPtrs.push_back(&student);
+      }
 
       // TODO:  Sort the vector of pointers using the STL sort algorithm
       //        with the comp parameter as the ordering relationship.
+      sort(auxStudentPtrs.begin(), auxStudentPtrs.end(), comp);
 
       // TODO:  Using the now-sorted vector of pointers, replace each Student
       //        in students with the Students from auxStudents in the correct
       //        order.
+      for (size_t i = 0; i < students.size(); ++i) {
+          students[i] = *auxStudentPtrs[i];
+      }
 
       // auxStudents will be destroyed upon return from the function
+}
+
+void Problem7() {
+  sorts();
 }
