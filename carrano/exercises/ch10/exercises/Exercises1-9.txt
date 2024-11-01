@@ -1,0 +1,118 @@
+Exercise 1)
+
+a. After arriving at a party, you shake hands with each person there.
+
+O(n)
+
+b. Each person in a room shakes hands with everyone else in the room.
+
+O(n^2)
+
+c. You climb a flight of stairs.
+
+O(n)
+
+d. You slide down the banister.
+
+O(n)
+
+e. After entering an elevator, you press a button to choose a floor.
+
+O(1)
+
+f. You ride the elevator from the ground floor up to the nth floor.
+
+O(n)
+
+g. You read a book twice
+
+O(n)
+
+Exercise 2)
+
+For every step backtrack back to the beginning and start over.
+
+Exercise 3)
+
+a. Computing the sum of the first n even integers by using a for loop
+
+O(n)
+
+b. Displaying all n integers in an array
+
+O(n)
+
+c. Displaying all n integers in a sorted linked chain
+
+O(n)
+
+d. Displaying all n names in an array of linked chains
+
+O(n^2)
+
+e. Displaying one array element
+
+O(1)
+
+f. Displaying the last integer in a linked chain
+
+O(1)
+
+g. Searching an array of n items for a particular value by using a sequential search
+
+O(n)
+
+h. Searching an array of n items for a particular value by using a binary search
+
+O(logn)
+
+i. Adding an item to a stack of n items
+
+O(1)
+
+j. Adding an item to a bag of n items
+
+O(1)
+
+Exercise 4)
+
+O(n^2)
+
+Outer loop loops n-1 times
+Second to outer loop loops n-1 times
+Inner loop loops 10 times (constant)
+
+Exercise 5)
+
+Outer loop: n-1
+Inner loop: p
+
+0 + 1 + ... n-1 = n*(n-1)/2
+
+Exercise 6)
+
+No, sequential search is O(n) and binary search is O(logn) for large arrays and for worst cases.
+
+Exercise 7)
+
+Drop lower order terms and constants.
+
+Exercise 8)
+
+loga(n) = logb(n)/logb(a), for all constants a, b > 1
+logb(a)*loga(n) = logb(n), logb(a) is a constant
+
+if f(n) is O(g(n)), then c*f(n) = O(g(n))
+we can drop the multiplicative constant terms
+
+therefore, loga(n) = logb(n)
+
+Exercise 9)
+
+if f(n) is O(g(n))
+and d(n) is O(h(n))
+
+then, f(n) + d(n)
+is O(max(g(n),h(n)))
+
+so 7n^2 + 5n is O(max(n^2,n)) = O(n^2)
