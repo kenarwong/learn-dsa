@@ -1,0 +1,140 @@
+Exercise 10)
+
+mergeSort()
+20 80 40 25 80 30
+
+mergeSort()
+20 80 40    25 80 30
+
+mergeSort()
+20    80 40    25    80 30
+
+mergeSort()
+20    80    40    25    80    30
+
+merge()
+20 80    40    25    80    30
+
+merge()
+20 40 80    25    80    30
+
+merge()
+20 40 80    25 80    30
+
+merge()
+20 40 80    25 30 80
+
+merge()
+20 25 30 40 80 80
+
+Exercise 11)
+a)
+
+Recursive calls continue until there is only 1 item in the array, so it only depends on number of items in the array.
+
+b)
+
+During merge step, which occurs only after mergeSort has reached its depth
+
+Exercise 12)
+
+quickSort()
+partition()
+20 80 40 25 60 10 15
+
+20 80 40 25 60 10 15
+20 10 40 25 60 80 15
+20 10 15 25 60 80 40
+15 10 20 25 60 80 40
+
+15 10 20 | 25 | 60 80 40
+
+quickSort()
+partition()
+15 10 20 [25 60 80 40]
+
+15 10 20 [25 60 80 40]
+10 | 15 | 20 [25 60 80 40]
+
+quickSort()
+partition()
+10 [15 20 25 60 80 40]
+
+quickSort()
+partition()
+[10 15] 20 [25 60 80 40]
+
+[10 15] 20 [25 60 80 40]
+
+quickSort()
+partition()
+[10 15 20 25] 60 80 40
+
+[10 15 20 25] 60 80 40
+[10 15 20 25] 60 40 80
+[10 15 20 25] 40 | 60 | 80
+
+quickSort()
+partition()
+[10 15 20 25] 40 [60 80]
+
+[10 15 20 25] 40 [60 80]
+
+quickSort()
+partition()
+[10 15 20 25 40 60] 80
+
+[10 15 20 25 40 60] 80
+
+return
+[10 15 20 25 40 60 80]
+
+Exercise 13)
+
+Breaks the array down to elements of size 1
+
+Exercise 14)
+
+First, last and median are pre-sorted, so each recursive call's total size is reduced by 3
+(n-3)*log(n-3)
+
+Exercise 15)
+
+This is called 2-way merge sorted. Each element in the array is considered as a list of 1 element. 
+Merging begins by taking pairs of elements and combining them with the merge function.
+Therefore, no recursion is necessary and can iterate from i =0; i < n/2; i = i + 2
+
+Exercise 16)
+
+Selection     Unstable
+Insertion     Stable
+Bubble        Stable
+Shell         Unstable
+Quick         Unstable
+Merge         Stable
+Radix         Stable
+
+Exercise 17)
+a)
+
+S2 HT
+
+(S2) (HT)
+(HT) (S2)
+
+HT S2
+
+b)
+
+Use:
+2 = 02
+...
+9 = 09
+T = 10
+J = 11
+Q = 12
+K = 13
+A = 14
+
+
+
