@@ -68,11 +68,14 @@ void Exercise2() {
     }
 
     // compose a key of chars and counts
-    std::string key = "";
+    std::string key;
+    int k = 0;
     for (auto it = m.begin(); it != m.end(); it++) {
       // std::cout << it->first << ": " << it->second << " ";
-      key += it->first;
-      key += it->second;
+      key.push_back(it->first);
+      // char c = char(it->second);
+      key.append(std::to_string(it->second));
+
     }
     // std::cout << std::endl;
 
