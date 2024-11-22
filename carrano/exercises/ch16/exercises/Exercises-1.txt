@@ -1,0 +1,37 @@
+1)
+  a) 6. Min value of right subtree
+  b) 8. Max value of left subtree
+
+2) 
+  max height)
+                A
+                  C
+                    E
+                      F
+                        L
+                          V
+                            Z
+  min height)
+                  F
+              C       L
+            A   E   V   Z
+
+3)
+  a) 
+                                60
+            20                                      70
+      10                  40                65              80
+                30              50                      75
+            25      35      45
+
+  b) 
+                                60
+            10                                      70
+                          40                65              80
+                  30            45                      75
+              25      35      
+
+4) 15-19 is not a binary search tree. H, V, and U are out of order. See question 15-8.
+
+5) Yes. Insertion order matters when inserting into a binary tree.
+

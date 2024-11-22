@@ -1,0 +1,224 @@
+1) 
+  a) 60
+  b) 60, 20, 40
+  c) 
+    60: 20, 70
+    20: 10, 40
+    40: 30, 50
+  d)
+    20,70
+    10,40
+    30,50
+  e) 40, 20, 60
+  f) 10, 40, 30, 50
+  g) 70, 10, 30, 50
+
+2) 4
+
+3) 
+
+  /** Checks if tree is empty 
+  @return True if tree is empty, or false if not. */
+  isEmpty()
+  
+  /** Returns height of tree
+  @return The integer number for height of tree */
+  getHeight()
+  
+  /** Gets the number of nodes in tree
+  @return The integer number of entries in tree */
+  getNumberOfNodes()
+  
+  /** Returns data at root of tree
+  @pre    Tree is not empty and has root data
+  @return Returns data at root of tree */
+  getRootData()
+
+  /** Sets data at root of tree
+  @param  Entry to set
+  @post   If tree is empty, entry is inserted as new root. If not empty, root is replaced by entry data.
+  @return None */
+  setRootData(newData)
+
+  /** Add a new entry to binary search tree
+  @param  Entry to add
+  @post   Entry is added in hierarchical search order
+  @return True if insertion is successful, or false if not */
+  add(newEntry)
+
+  /** Removes entry from binary search tree
+  @param  Entry to remove
+  @post   Entry is removed, preserving hierarchical search order of rest of tree
+  @return True if removal is successful, or false if not */
+  remove(anEntry)
+
+  /** Removes all entries from binary search tree
+  @post   All entries are removed and tree is empty */
+  clear()
+
+  /** Get entry from binary search tree
+  @param  Entry to get
+  @return Entry in tree that matches anEntry. Throws exception if not found */
+  getEntry(anEntry)
+
+  /** Checks if entry exists in binary search tree
+  @param  Entry to check
+  @return True if entry exists in tree, false if not. */
+  contains(data)
+
+  /** Performs a preorder traversal on tree
+  @param  visit is a client-defined function that performs an operation on or with the data in each visited node.  */
+  preorderTraverse(visit)
+
+  /** Performs a inorder traversal on tree
+  @param  visit is a client-defined function that performs an operation on or with the data in each visited node.  */
+  inorderTraverse(visit)
+
+  /** Performs a postorder traversal on tree
+  @param  visit is a client-defined function that performs an operation on or with the data in each visited node.  */
+  postorderTraverse(visit)
+
+4) 
+  Preorder:     M, G, D, A, H, K, L, T, R, V, U, W
+  Inorder:      A, D, H, G, K, L, M, R, U, V, T, W
+  Postorder:    A, H, D, L, K, G, U, V, R, W, T, M
+
+5)
+  a) Checks if root of tree has children. True if no children (is a leaf), false otherwise.
+  b) As long as the data type of isLeaf matches, and the client implements isLeaf to check for existence both (2) children (binary tree).
+
+6) 60, 20, 10, 40, 30, 50, 70
+
+7)
+  a) 60 > 20 > 40 > 30
+  b) 60 > 20 > 10 > null
+
+8) No, nodes H, U, and V are out of order.
+  
+9)
+  a)
+                W
+              T
+            N
+          J
+        E
+      B
+    A
+
+  b)
+                W
+              T
+            N
+          A
+            B
+              E
+                J
+
+  c)
+                A
+                  B
+                    W
+                  J
+                E   N
+                      T
+
+  d)
+                B
+            A         T
+                  E       W
+                    N
+                  J
+      
+10)
+  a) 6. The min value of the right subtree.
+  b) 4, 2, 5, 8, 1, 6, 9, 3, 7
+
+11) 
+                                60
+            20                                      70
+      10                  40                65              80
+                30              50                      75
+            25      35      45
+    
+12) 
+  On each recursive operation, you will have to perform a comparison to determine whether you will traverse down the left or right subtree.
+  If there is no standard on whether duplicates can exist in the left or right subtree, then you likely run into issues while traversing down the correct subtree.
+  
+  For example:
+              5
+            5   5
+          3       7
+
+  When searching for 7, if there is no standard for duplicates, then it is likely that the search algorithm will go down the left subtree.
+  As a result, the value 7 will not be found, which would be incorrect.
+
+13)
+  a) 23
+  b) getValue(node)
+    Base case) 
+      if no children
+        return this->value;
+    1) Determine if max or min node
+      1a) if max node:
+        return max(getValue(left),getValue(right),this->value)
+      1b) if min node:
+        return min(getValue(left),getValue(right),this->value)
+  
+14) 
+  Yes, there will be at least one binary search tree structure that matches the list. If unknown beforehand, you can just recreate it given the list as input.
+  Yes, there can be multiple binary search tree structures that fit the same list. After the visiting the current item, preorder traversal then traverses 
+  down either subtree. So, if either subtree is empty, the other subtree is traversed. Many hypothetical scenarios can create identical preorder traversals, 
+  if you just swap the subtree with the empty one. The below example demonstrates this.
+
+  Example: All the binary search tree structures produce the same preorder traversals. 
+      A       A           A       A
+    B           B       B           B
+  C               C       C       C
+
+15)
+  f(0) = 0 
+  f(h) = 2^(h-1), h > 0 
+
+16)
+  search(node, val, min, max)
+    if (val < min || val > max || node == null)
+      return -1; // not found
+    
+    if (node->val == val) {
+      return node->val;
+    } else if (val < node->val) {
+      return search(node->left, val, min, max);
+    } else  {
+      return search(node->right, val, min, max);
+    }
+
+17)
+  Recurrence Relation)
+    nodes(0) = 0
+    nodes(h) = 2^(h-1) + nodes(h-1), if h > 0
+
+  Closed Formula)
+    nodes(h) = 2^h - 1  for all h >= 0
+
+  Basis)
+    nodes(0) = 2^0 - 1 = 0
+  
+  Induction)
+    Step 1) Prove for h = k
+      Assume:
+        nodes(k) = 2^k - 1
+
+    Step 2) Show property is true for h = k+1
+      Need to Prove:
+        nodes(k+1) = 2^(k+1) - 1
+
+      From recurrence relation:
+        nodes(k)    = 2^(k-1) + nodes(k-1)
+        nodes(k+1)  = 2^(k+1-1) + nodes(k+1-1)
+        nodes(k+1)  = 2^k + nodes(k)
+
+      From step 1 assumption:
+        nodes(k+1)  = 2^k + 2^k - 1
+        nodes(k+1)  = 2^(k+1) - 1
+
+18+19) Same as 17. Definition of full binary tree is a tree with maximum nodes at height h.
