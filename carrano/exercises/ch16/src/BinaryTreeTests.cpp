@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "BinaryNodeTree.h" // Ensure this header file exists and is correctly implemented
+#include "BinaryNodeTree.h" 
 #include <cassert>
 
 void testIntBinaryNodeTree() {
