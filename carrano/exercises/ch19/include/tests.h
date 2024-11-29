@@ -3,5 +3,6 @@
 
 int BinaryTreeTests();
 int BinarySearchTreeTests();
+int TreeDictionaryTests();
 
 #endif

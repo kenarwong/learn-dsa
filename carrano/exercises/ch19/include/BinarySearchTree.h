@@ -170,6 +170,11 @@ std::shared_ptr<BinaryNode<ItemType>> BinarySearchTree<ItemType>::removeValue(st
 template <class ItemType>
 std::shared_ptr<BinaryNode<ItemType>> BinarySearchTree<ItemType>::findNode(std::shared_ptr<BinaryNode<ItemType>> treePtr, const ItemType& target, bool& success) const
 {
+  if (treePtr == nullptr) {
+    success = false;
+    return nullptr;
+  }
+
   if (treePtr->getItem() == target) {
     success = true;
     return treePtr;
