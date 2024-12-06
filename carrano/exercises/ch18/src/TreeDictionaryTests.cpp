@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <ctime>
 
-std::vector<std::string> generateRandomEntries(TreeDictionary<std::string, int>& dict, int numEntries) {
+std::vector<std::string> generateTreeDictionaryRandomEntries(TreeDictionary<std::string, int>& dict, int numEntries) {
   srand(time(0));
   std::vector<std::string> keys;
   for (int i = 0; i < numEntries; ++i) {
@@ -26,9 +26,9 @@ std::vector<std::string> generateRandomEntries(TreeDictionary<std::string, int>&
   return keys;
 }
 
-void testAddAndRemove() {
+void testTreeDictionaryAddAndRemove() {
   TreeDictionary<std::string, int> dict;
-  std::vector<std::string> keys = generateRandomEntries(dict, 20);
+  std::vector<std::string> keys = generateTreeDictionaryRandomEntries(dict, 20);
 
   // Test if all entries are added
   assert(dict.getNumberOfEntries() == 20);
@@ -48,7 +48,7 @@ void testAddAndRemove() {
   assert(dict.getNumberOfEntries() == 0);
 }
 
-void testTraversal() {
+void testTreeDictionaryTraversal() {
   TreeDictionary<std::string, int> dict;
 
   std::vector<std::pair<std::string, int>> entries;
@@ -73,9 +73,9 @@ void testTraversal() {
 }
 
 int TreeDictionaryTests() {
-  testAddAndRemove();
-  testTraversal();
+  testTreeDictionaryAddAndRemove();
+  testTreeDictionaryTraversal();
 
-  std::cout << "All tests passed!" << std::endl;
+  std::cout << "All Tree Dictionary tests passed!" << std::endl;
   return 0;
 }

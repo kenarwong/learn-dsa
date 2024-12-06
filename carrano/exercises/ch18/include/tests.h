@@ -4,5 +4,6 @@
 int BinaryTreeTests();
 int BinarySearchTreeTests();
 int TreeDictionaryTests();
+int HashedDictionaryTests();
 
 #endif

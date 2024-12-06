@@ -51,6 +51,7 @@
       "map": "cpp",
       "regex": "cpp",
       "sstream": "cpp",
-      "set": "cpp"
+      "set": "cpp",
+      "list": "cpp"
     }
 }

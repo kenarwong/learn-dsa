@@ -5,7 +5,7 @@
 #include <vector>
 #include <functional>
 
-void testaddAndContains() {
+void testBinarySearchTreeAddAndContains() {
   BinarySearchTree<int> bst;
   bst.add(10);
   bst.add(5);
@@ -15,11 +15,9 @@ void testaddAndContains() {
   assert(bst.contains(5) == true);
   assert(bst.contains(15) == true);
   assert(bst.contains(20) == false);
-
-  std::cout << "testaddAndContains passed!" << std::endl;
 }
 
-void testRemove() {
+void testBinarySearchTreeRemove() {
   BinarySearchTree<int> bst;
   bst.add(10);
   bst.add(5);
@@ -61,11 +59,9 @@ void testRemove() {
   for (int item : items) {
     bst.contains(item) == (item == itemToRemove);
   }
-
-  std::cout << "testRemove passed!" << std::endl;
 }
 
-void testInOrderTraversal() {
+void testBinarySearchTreeInOrderTraversal() {
   BinarySearchTree<int> bst;
   bst.add(10);
   bst.add(5);
@@ -86,11 +82,9 @@ void testInOrderTraversal() {
   bst.inorderTraverse(visit);
 
   assert(index == expected.size());
-
-  std::cout << "testInOrderTraversal passed!" << std::endl;
 }
 
-void testGetEntry()
+void testBinarySearchTreeGetEntry()
 {
   BinarySearchTree<int> bst;
   bst.add(10);
@@ -116,15 +110,13 @@ void testGetEntry()
   {
     assert(true); // Exception should be thrown
   }
-
-  std::cout << "testGetEntry passed!" << std::endl;
 }
 
 int BinarySearchTreeTests() {
-  testaddAndContains();
-  testRemove();
-  testInOrderTraversal();
-  testGetEntry();
+  testBinarySearchTreeAddAndContains();
+  testBinarySearchTreeRemove();
+  testBinarySearchTreeInOrderTraversal();
+  testBinarySearchTreeGetEntry();
 
   std::cout << "All Binary Search Tree tests passed!" << std::endl;
   return 0;
