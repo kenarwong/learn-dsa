@@ -75,7 +75,7 @@ void testInOrderTraversal() {
 
   std::vector<int> expected = {3, 5, 7, 10, 15};
   size_t index = 0;
-  std::function<void(std::shared_ptr<BinaryNode<int>>)>  visit = [&expected, &index](std::shared_ptr<BinaryNode<int>> curPtr) {
+  std::function<void(std::shared_ptr<BinaryNode<int>>)> visit = [&expected, &index](std::shared_ptr<BinaryNode<int>> curPtr) {
     int item = curPtr->getItem();
     std::cout << "Visiting: " << item << std::endl;
 

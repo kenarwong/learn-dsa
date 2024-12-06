@@ -2,8 +2,8 @@
 
 int main()
 {
-  // BinaryTreeTests();
-  // BinarySearchTreeTests();
+  BinaryTreeTests();
+  BinarySearchTreeTests();
   TreeDictionaryTests();
 
   return 0;

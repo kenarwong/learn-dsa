@@ -45,6 +45,7 @@ public:
   /** Traverses the entries in this dictionary in sorted search-key order
    and calls a given client function once for the value in each entry. */
   void traverse(void visit(ValueType&)) const;
+  void traverse(std::function<void(std::shared_ptr<BinaryNode<Entry<KeyType,ValueType>>>)> visit) const;
 }; // end TreeDictionary
 
 template <class KeyType, class ValueType>
@@ -118,6 +119,12 @@ void TreeDictionary<KeyType, ValueType>::traverse(void visit(ValueType&)) const 
     visit(value);
   };
   entryTree.inorderTraverse(visitEntry);
+}
+
+template <class KeyType, class ValueType>
+void TreeDictionary<KeyType, ValueType>::traverse(std::function<void(std::shared_ptr<BinaryNode<Entry<KeyType,ValueType>>>)> visit) const
+{
+  entryTree.inorderTraverse(visit);
 }
 
 //#include "TreeDictionary.cpp"

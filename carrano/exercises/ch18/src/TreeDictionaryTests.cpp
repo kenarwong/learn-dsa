@@ -59,8 +59,14 @@ void testTraversal() {
     dict.add(key, value);
   }
 
-  auto visit = [](int& value) {
-    std::cout << "Value: " << value << std::endl;
+  size_t index = 0;
+  std::function<void(std::shared_ptr<BinaryNode<Entry<std::string,int>>>)> visit = [&entries, &index](std::shared_ptr<BinaryNode<Entry<std::string,int>>> node) {
+    auto item = node->getItem();
+    std::cout << "Visiting item with key: " << item.getKey() << std::endl;
+
+    assert(item.getKey() == entries[index].first);
+    assert(item.getValue() == entries[index].second);
+    index++;
   };
 
   dict.traverse(visit);
