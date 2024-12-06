@@ -182,10 +182,10 @@ void testHashedDictionaryHighLoad(bool randomizeValues = false) {
 
 int HashedDictionaryTests()
 {
-  testHashedDictionaryConstructors();
-  testHashedDictionaryAddAndRemove();
-  testHashedDictionaryTraversal();
-  testHashedDictionaryHighLoad();
+  testHashedDictionaryConstructors(true);
+  testHashedDictionaryAddAndRemove(true);
+  testHashedDictionaryTraversal(true);
+  testHashedDictionaryHighLoad(true);
 
   std::cout << "All Hashed Dictionary tests passed!" << std::endl;
   return 0;
