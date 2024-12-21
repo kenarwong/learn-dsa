@@ -1,3 +1,0 @@
-Use both the depth-first strategy and the breadth-first strategy to traverse the graph in Figure 20-33, beginning
-with vertex 0, and the graph in Figure 20-36, beginning with vertex a. List the vertices in the order in which each
-traversal visits them.
