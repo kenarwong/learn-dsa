@@ -21,9 +21,7 @@
       - Average case = O(2N) = O(N)
       - Worst case = O(N^2)
 
-3,4,5) See carrano/exercises/ch16. Added functions nodeCount, edgeCount, leafCount to BinaryNodeTree.
-
-6)
+3,4,5,6) See carrano/exercises/ch16. Added functions nodeCount, edgeCount, leafCount, closestCommonAncestor to BinaryNodeTree.
   
 7) 7 = 2^3 - 1, full binary tree
   

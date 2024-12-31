@@ -622,22 +622,52 @@ inline std::shared_ptr<BinaryNode<ItemType>> BinaryNodeTree<ItemType>::closestCo
   // Assume node1 and node2 are always valid nodes
   // Assume node values are unique
   // Assume if two nodes have the same value, then they are the same node
-  // This will be returned on first call and will not trigger on any later recursive call
-  if (node1->getItem() == node2->getItem()) {
-    return node1;
+
+  // no child, reached dead end
+  if (current == nullptr) {
+    return nullptr;
   }
 
-  // Can assume that node1 and node2 are different and exist somewhere in the tree
+  // one of the nodes we are searching for 
+  if (node1 == current || node2 == current) {
+    return current;
+  }
 
-  // assume current is closest common ancestor
-  // check if this node is node1 or node2
-  //  if it is either
-  //    update close common ancestor to be 
-  //  if not, search left tree
-  //    once node1 is found, update closest common ancestor
-  //    search right tree for node2
+  // recursive search left and right subtrees for node1 and node2 
+  std::shared_ptr<BinaryNode<ItemType>> left = closestCommonAncestor(current->getLeftChildPtr(), node1, node2);
+  std::shared_ptr<BinaryNode<ItemType>> right = closestCommonAncestor(current->getRightChildPtr(), node1, node2);
 
-  return std::shared_ptr<BinaryNode<ItemType>>();
+  // One "convergence" point
+  // one of each node was found in the left and right subtrees
+  if (left != nullptr && right != nullptr) {
+    return current; // this must be the closest common ancestor 
+  }
+
+  // Two other convergence points:
+  //    1) Both node1 and node2 are the same node, which is also the common ancestor
+  //    2) One of the nodes is a child of the other node, the latter is the common ancestor
+  // Both of these conditions only require returning the common ancestor,
+  // Recursive callers will never arrive at the first convergence point,
+  //    where left and right both return non-null
+
+  // Since we know node1 and node2 exist somewhere in the tree, 
+  // and this is not the closest common ancestor,
+  // Then, three conditions remain:
+  //    1) Both node1 and node2 (and their common ancestor) exist in one subtree, 
+  //        propagate common ancestor
+  //    2) One node exists in one subtree, the other is in a different branch above this subtree, 
+  //        so just propagate this one node
+  //    3) Neither exist in this subtree, 
+  //        so propagate nullptr
+
+  // "something" was found in the left subtree,
+  // prioritorize over right
+  if (left != nullptr) {
+    return left;
+  }
+
+  // right may be found or not found
+  return right;
 }
 
 #endif
