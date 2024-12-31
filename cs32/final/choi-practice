@@ -1,0 +1,63 @@
+1)
+  a) X Heap sort, merge sort, quick sort  == n*log(n) 
+    1 time linear search == O(n)
+  b) Binary Search Tree == n*log(n)
+     Hash table == n
+
+2)
+  a) N^2
+  b) N*log(N)
+  c) b
+  d) Create a Hash Table of size 3N
+      - Load function = # of values / Total size
+          - "Optimal" load function = 2/3 
+          - Size of Z = size of X + size of Y = 2N
+      - 2/3 = 2N / Total size
+      - Total size = 3/2 * 2N
+     Modify hash table to traverse chain when inserting. Check for duplicates, and abort insert if duplicate is found.
+      - This operation worst case is O(N)
+      - Average case is O(load) = O(2/3) = O(1), constant
+    Insert X and Y into hash table
+      - Average case = O(2N) = O(N)
+      - Worst case = O(N^2)
+
+3,4,5) See carrano/exercises/ch16. Added functions nodeCount, edgeCount, leafCount to BinaryNodeTree.
+
+6)
+  
+7) 7 = 2^3 - 1, full binary tree
+  
+                E
+        N                 G
+  U         C        L         A
+
+8)  
+                U
+        C                 A
+  N         L       G          E
+                  
+9)
+    
+10)
+    
+11)
+
+12)
+  a) Option B: O(1) look-up, no updating, no ordering
+  b) Option A: Allows for range/ordering of entries. O(n^2) during preprocessing. Option B is O(n^3), for each item, would need to traverse the vector AND shift entries to maintain order
+  c) Option B
+    Re-hashing hash table O(n) 
+      vs 
+    Re-sizing vector O(n)
+
+    Hash table look-up O(n) worst case 
+      vs
+    Vector look-up O(n) worst case
+
+    Hash table traversal O(B+n), maxheap store O(n*logn), maxheap extract first k O(k*logn)
+        Total: O(B+n + n*logn + k*logn)
+      vs 
+    Vector sort n*log(n), vector print first k O(k)
+        Total: O(n*logn + k)
+13)
+      

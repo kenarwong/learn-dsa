@@ -120,6 +120,11 @@ public:
   int nodeCount(std::shared_ptr<BinaryNode<ItemType>> node);
   int edgeCount(std::shared_ptr<BinaryNode<ItemType>> node);
   int leafCount(std::shared_ptr<BinaryNode<ItemType>> node);
+  std::shared_ptr<BinaryNode<ItemType>> closestCommonAncestor(
+    std::shared_ptr<BinaryNode<ItemType>> current, 
+    std::shared_ptr<BinaryNode<ItemType>> node1, 
+    std::shared_ptr<BinaryNode<ItemType>> node2);
+
 }; // end BinaryNodeTree
 
 template<class ItemType>
@@ -606,6 +611,33 @@ inline int BinaryNodeTree<ItemType>::leafCount(std::shared_ptr<BinaryNode<ItemTy
     return 1;
   }
 
+}
+
+template <class ItemType>
+inline std::shared_ptr<BinaryNode<ItemType>> BinaryNodeTree<ItemType>::closestCommonAncestor(
+  std::shared_ptr<BinaryNode<ItemType>> current, 
+  std::shared_ptr<BinaryNode<ItemType>> node1, 
+  std::shared_ptr<BinaryNode<ItemType>> node2)
+{
+  // Assume node1 and node2 are always valid nodes
+  // Assume node values are unique
+  // Assume if two nodes have the same value, then they are the same node
+  // This will be returned on first call and will not trigger on any later recursive call
+  if (node1->getItem() == node2->getItem()) {
+    return node1;
+  }
+
+  // Can assume that node1 and node2 are different and exist somewhere in the tree
+
+  // assume current is closest common ancestor
+  // check if this node is node1 or node2
+  //  if it is either
+  //    update close common ancestor to be 
+  //  if not, search left tree
+  //    once node1 is found, update closest common ancestor
+  //    search right tree for node2
+
+  return std::shared_ptr<BinaryNode<ItemType>>();
 }
 
 #endif

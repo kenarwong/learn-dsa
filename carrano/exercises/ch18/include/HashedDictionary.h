@@ -45,7 +45,7 @@ public:
    This greatly simplifies and speeds up (in low load cases) traversal.
    However, the maintainence of the linked list adds overhead to add and remove operations.
    Add operation will still be O(1), but removal will be O(n) because we need to find the entry in the linked list.
-   Normally, removal would only be 1 + load factor / 2 (e.g. average number of entries in a chain), 
+   Normally, removaal would only be 1 + load factor / 2 (e.g. average number of entries in a chain), 
    but now we must traverse the linked list as well.
   */
   void traverse(void visit(ValueType&)) const;
