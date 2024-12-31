@@ -17,6 +17,7 @@
 #include <memory>
 #include <algorithm>
 #include <functional>
+#include <vector>
 
 template<class ItemType>
 class BinaryNodeTree : public BinaryTreeInterface<ItemType>
@@ -111,6 +112,14 @@ public:
   // Overloaded Operator Section.
   //------------------------------------------------------------
   BinaryNodeTree<ItemType>& operator=(const BinaryNodeTree& rightHandSide);
+
+  //------------------------------------------------------------
+  // Added functions for Final Exam Practice (Choi)
+  //------------------------------------------------------------
+  std::shared_ptr<BinaryNode<ItemType>> getRootPtr() const { return rootPtr; }
+  int nodeCount(std::shared_ptr<BinaryNode<ItemType>> node);
+  int edgeCount(std::shared_ptr<BinaryNode<ItemType>> node);
+  int leafCount(std::shared_ptr<BinaryNode<ItemType>> node);
 }; // end BinaryNodeTree
 
 template<class ItemType>
@@ -539,6 +548,64 @@ BinaryNodeTree<ItemType>& BinaryNodeTree<ItemType>::operator=(const BinaryNodeTr
   }
 
   return *this;
+}
+
+template <class ItemType>
+inline int BinaryNodeTree<ItemType>::nodeCount(std::shared_ptr<BinaryNode<ItemType>> node)
+{
+  if (node == nullptr) {
+    return 0;
+  }
+
+  // Assumes nodes can have variable number of children (instead of just 2)
+  std::vector<std::shared_ptr<BinaryNode<ItemType>>> children;
+  children.push_back(node->getLeftChildPtr());
+  children.push_back(node->getRightChildPtr());
+
+  int nodes = 1;  // initialize with this node as 1
+  for (auto& child : children) {
+    nodes += nodeCount(child); // accumulate each child's node count
+  }
+
+  return nodes;
+}
+
+template <class ItemType>
+inline int BinaryNodeTree<ItemType>::edgeCount(std::shared_ptr<BinaryNode<ItemType>> node)
+{
+  // no edges when tree is empty
+  if (node == nullptr) {
+    return 0;
+  }
+
+  return nodeCount(node) - 1;
+}
+
+template <class ItemType>
+inline int BinaryNodeTree<ItemType>::leafCount(std::shared_ptr<BinaryNode<ItemType>> node)
+{
+  if (node == nullptr) {
+    return 0;
+  }
+
+  // Assumes nodes can have variable number of children (instead of just 2)
+  std::vector<std::shared_ptr<BinaryNode<ItemType>>> children;
+  children.push_back(node->getLeftChildPtr());
+  children.push_back(node->getRightChildPtr());
+
+  // Determine if this is a leaf
+  int leaves = 0;
+  for (auto& child : children) {
+    leaves += leafCount(child); // accumulate children's leaf count
+  }
+
+  if (leaves > 0) {
+    return leaves;
+  } else {
+    // If children report no leaves, then this is a leaf
+    return 1;
+  }
+
 }
 
 #endif
