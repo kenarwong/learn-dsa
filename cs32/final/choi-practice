@@ -37,14 +37,104 @@
   N         L       G          E
                   
 9)
+  a)
+  
+  int countFront(queue<char>& q)
+  {
+    // check empty
+    if (q.empty()) {
+      return 0;
+    }
+
+    // look at first char
+    char c = q.front();
+
+    // initialize
+    int count = 0;
+    int size = q.size();
+
+    for(int i = 0; i < size; i++) {
+      // pop char
+      char next = q.front();
+      q.pop();
+      
+      if (next == c) {
+        count++;  
+      }
+
+      // requeue char
+      q.push(next);
+    }
+
+    return count;
+  }
+
+  b)
+    
+  int countTop(stack<char>& s)
+  {
+    // check empty
+    if (s.empty()) {
+      return 0;
+    }
+
+    // look at top char
+    char c = q.top();
+
+    // initialize
+    int count = 0;
+    stack<int> s2;
+
+    while(!s.empty()) {
+      // pop char
+      char next = s.top();
+      s.pop();
+
+      if (next == c) {
+        count++;  
+      }
+
+      // place on other stack
+      s2.push(next);
+    }
+
+    // refill original stack
+    while(!s2.empty()) {
+      // pop char
+      char next = s2.top();
+      s2.pop();
+
+      // place back on stack
+      s.push(next);
+    }
+
+    return count;
+  }
     
 10)
+  0 - 
+  1 - 
+  2 - 1
+  3 -
+  4 - 7, 37
+  5 -
+  6 - 23, 53, 83
+  7 -
+  8 - 14, 19
+  9 -
     
+  No, for this hash size, multiplying by 2 actually made the values in the table less dispersed. Odd numbers never used.
+
 11)
 
+  14 10 11 7 9 8 6 4 3 5
+
+  14 12 11 7 10 8 6 4 3 5 9
+
 12)
-  a) Option B: O(1) look-up, no updating, no ordering
-  b) Option A: Allows for range/ordering of entries. O(n^2) during preprocessing. Option B is O(n^3), for each item, would need to traverse the vector AND shift entries to maintain order
+  a) Option B: O(1) look-up, no updating, no ordering. For preprocessing, Option B: O(n), Option A: O(n*log(n))
+  b) X Option A: Allows for range/ordering of entries. O(n^2) during preprocessing. Option B is O(n^3), for each item, would need to traverse the vector AND shift entries to maintain order
+    Option B: Can perform binary search on a sorted vector. O(log(n))
   c) Option B
     Re-hashing hash table O(n) 
       vs 
@@ -59,5 +149,62 @@
       vs 
     Vector sort n*log(n), vector print first k O(k)
         Total: O(n*logn + k)
+
 13)
+  Node* addOp(Node* root, char op, char digit) {
+    int val = root->val;
+    
+    // if root is a digit, '*', or '/'
+    if (isdigit(val) || val == '*' || val == '/') {
+      // this op does not take precedence
+      // create new root, old root is left subtree
+
+      Node* digitNode = new Node(digit, nullptr, nullptr);
+      Node* newRoot = new Node(op, root, digitNode);
+
+      return newRoot;
+    } 
       
+    // root is '+' or '-'
+    if (op == '*' || op == '/') {
+      // this op takes precedence
+      // root remains
+
+      // recurse down right subtree
+      // update right subtree
+      root->right = addOp(root->right, op, digit); 
+
+      return root;
+    } else {
+      // this op does not take precedence
+      // create new root, left subtree
+
+      Node* digitNode = new Node(digit, nullptr, nullptr);
+      Node* newRoot = new Node(op, root, digitNode);
+
+      return newRoot;
+    }
+    
+  }
+
+  int evaluate(Node *root) {
+    int val = root->val;
+    if (isdigit(val)) {
+      return val/1;
+    }
+
+    // operands
+    int op1 = evaluate(root->left);
+    int op2 = evaluate(root->right);
+
+    // root is an op
+    if (val == '*') {
+      return op1 * op2;
+    } else if (val == '/') {
+      return op1 / op2;
+    } else if (val == '+') {
+      return op1 + op2;
+    } else if (val == '-') {
+      return op1 - op2;
+    }
+  }
