@@ -1,0 +1,206 @@
+1)
+  E. unordered_map<string,map<string<set<string>>>
+
+2)
+  a) (1+load/2)*log(M)
+  b) U*M*log(A)
+  c) U*log(M) + A
+
+3)
+  (5 + (6 * 7)) - 3 = 44
+
+4)
+  In-order successor:
+            11
+      7           12
+  3                   14
+      3
+  In-order predecessor:
+            7
+    3            12
+       3      11    14
+
+5)
+  a) for loops: (n^2 - n) / 2 = n^2
+     set insert: log(n)
+     total: n^2 * log(n)
+  b) for loops: (n^2 - n) / 2 = n^2
+     list insert: 1
+     total: n^2 
+
+6)
+  Step 1) Heapification
+  startNode = n/2 - 1 = 9/2 - 1 = 3
+  
+  6 16 3 19 13 72 13 12 99
+  6 16 3 99 13 72 13 12 19
+  6 16 72 99 13 3 13 12 19
+  6 99 72 16 13 3 13 12 19
+  6 99 72 19 13 3 13 12 16
+  99 6 72 19 13 3 13 12 16
+  99 19 72 6 13 3 13 12 16
+  99 19 72 16 13 3 13 12 6
+
+  Step 2) Extraction (in place)
+
+  99 19 72 16 13 3 13 12 6
+  6 19 72 16 13 3 13 12 99
+  72 19 13 16 13 3 6 12 99
+  12 19 13 16 13 3 6 72 99
+  19 12 13 16 13 3 6 72 99
+  19 16 13 12 13 3 6 72 99
+  6 16 13 12 13 3 19 72 99
+  16 6 13 12 13 3 19 72 99
+  16 13 13 12 6 3 19 72 99
+  3 13 13 12 6 16 19 72 99
+  13 3 13 12 6 16 19 72 99
+  13 12 13 3 6 16 19 72 99
+  6 12 13 3 13 16 19 72 99
+  13 12 6 3 13 16 19 72 99
+  3 12 6 13 13 16 19 72 99
+  12 3 6 13 13 16 19 72 99
+  6 3 12 13 13 16 19 72 99
+  3 6 12 13 13 16 19 72 99
+  
+7)
+  It is in the middle of extraction phase. 16 and 20 have been sorted.
+
+8)
+  99 or 11. Everything left of these values are less than or equal to the value.
+
+9)
+  2 passes of bubble sort)
+  3 6 11 11 13 12 7 13 15
+ 
+  2 passes of selection sort)
+  3 6 11 11 13 15 13 12 7
+
+  2 passes of insertion sort)
+  3 6 11 11 13 15 13 12 7
+
+10)
+  
+  HashTable::HashTable(int size) {
+    arr_ = new Node*[size];
+    size_ = size;
+    for (int i = 0; i < size; i++) {
+      arr_[i] = nullptr;
+    }
+  }
+
+  double HashTable::get_load() const {
+    double count = 0;
+    for (int i = 0; i < size_; i++) {
+      Node* cur = arr_[i];
+      while (cur != nullptr) {
+        cur = cur->next;
+        count++;
+      }
+    }
+
+    return count / size_;
+  }
+
+11)
+        Cows
+    Rats    Pigs
+Cats  Dogs
+
+  Pre-order traversal: Cows, Rats, Cats, Dogs, Pigs
+
+12)
+  int tree_depth(Node *root) {
+    if (root == nullptr) {
+      return 0;
+    }
+
+    // traverse left
+    int left = 1 + tree_depth(root->leftChild);
+
+    // traverse right
+    int right = 1 + tree_depth(root->rightChild);
+
+    // return max depth
+    if (left >= right) {
+      return left;
+    } else {
+      return right;
+    }
+  }
+
+13)
+  int shallowest_even(Node *root) {
+    if (root == nullptr) {
+      return 101;
+    }
+
+    if (root->value % 2 == 0) {
+      return 0;
+    }
+
+    // traverse left
+    int left = shallowest_even(root->leftChild);
+
+    // traverse right
+    int right = shallowest_even(root->rightChild);
+    if (left == 101 && right == 101) {
+      return 101;
+    }
+
+    return 1 + min(left,right);
+  }
+
+14)
+  class Diary {
+  private:
+    std::string title_;
+    std::string entries_;
+
+  public:
+    Diary(const std::string &title);
+    virtual ~Diary();
+
+    std::string getTitle() const;
+    virtual void writeEntry(const std::string &entry);
+    virtual std::string read() const;
+
+  };
+
+  Diary::Diary(const std::string &title) : title_(title) { }
+
+  std::string Diary::getTitle() const { 
+    return title_;
+  }
+
+  void Diary::writeEntry(const std::string &entry) {
+    entries_ += entry;
+  }
+
+  std::string Diary::read() const {
+    return entries_;
+  }
+
+15)
+  class SecretDiary : public Diary {
+  private:
+    std::string encode(const std::string& entry);
+    std::string decode(const std::string& entry);
+
+  public:
+    SecretDiary(const std::string &title);
+    virtual ~SecretDiary();
+    virtual void writeEntry(const std::string &entry);
+    virtual std::string read() const;
+  };
+
+  SecretDiary::SecretDiary() : Diary("TOP_SECRET") {}
+
+  void SecretDiary::writeEntry(const std::string &entry) {
+    Diary::writeEntry(encode(entry));
+  }
+
+  std::string SecretDiary::read() const {
+    return decode(Diary::read());
+  }
+  
+  
