@@ -1,0 +1,30 @@
+1) F, I
+2) A, C, E
+3) A - wrong // review
+4) A, D - wrong // A review, C missed "deletion only at start and end", F review, G missed "sorted"
+5) D
+6) A, B, D, E
+          2
+    0           3
+      1             5
+                        7
+                            9
+7) D
+8) E - wrong // D, non-distinct values? not sure if correct
+9) B
+10) A
+11) D - wrong // review
+12) 
+  O2 B 2 ~B ~O2 O4 B O3 D 3 ~D ~O3 ~B ~O3 <-- last value is 4 not 3
+13)
+  int next_x = x + direction[i][0];
+  int next_y = y + direction[i][1];
+
+  find_path(maze, bx, by, next_x, next_y, path + dir_str[i], numBomb, found);
+
+  else if(maze[ next_x ][ next_y ] == 'R' && numBombs > 0) 
+
+  find_path(maze, bx, by, next_x, next_y, path + dir_str[i] + " Bomb!\n", numBomb - 1, found);
+  
+  if (!found)
+    maze [ next_x ][ next_y ] = 'R';
