@@ -1,0 +1,37 @@
+1d)
+
+David, 1
+Carey, 1
+Carey, 2
+David, 2
+Carey, 1
+David, 3
+
+checkScm
+p1, David
+p2, David
+p3, Carey
+p4, David
+
+David, 2
+
+Line 1: 2 1
+Line 2: 3 1
+Line 3: 2 1
+Line 4: 0 0
+
+2)
+
+void LinkedList::eraseSecondToLast()
+{
+  Node* curr = _;   // head
+  while (_ != _)    // curr->next != nullptr
+    _ = _;          // curr = curr->next
+                    // curr is last
+  Node* temp = _;   // curr->prev
+  _ = _;            // curr->prev->prev->next = curr
+  _ = _;            // curr->prev = curr->prev->prev
+  delete _;         // temp
+}
+
+I, B, K, A, B, E, H, A, E, G, L
