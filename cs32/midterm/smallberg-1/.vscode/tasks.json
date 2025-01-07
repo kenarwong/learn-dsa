@@ -32,6 +32,16 @@
               "isDefault": true,
               "problemMatcher": "$gcc"
           }
+      },
+      {
+          "label": "build5",
+          "type": "shell",
+          "command": "make QUESTION=5",
+          "group": {
+              "kind": "build",
+              "isDefault": true,
+              "problemMatcher": "$gcc"
+          }
       }
   ]
 }
