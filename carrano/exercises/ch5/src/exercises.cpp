@@ -3,6 +3,7 @@
 #include "helpers.h"
 #include <set>
 #include <queue>
+#include <stack>
 #include <algorithm>
 #include <locale>
 
@@ -18,6 +19,159 @@ bool isPal(const char* c, int start, int end) {
 bool isPal(const std::string str) {
   if(!iswhitespace(str)) {
     return isPal(str.c_str(), 0, str.size()-1);
+  }
+
+  return true;
+}
+
+// // function to check if expression is of form
+// bool isForm(const char* c, int start, int end) {
+//   int length = end - start + 1;
+// 
+//   if (length == 0) {
+//     return false;
+//   }
+// 
+//   if (length == 1) {
+//     if (expr[start] == 'C') {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   }
+//   
+//   if (expr[start] != 'A' && expr[start] != 'B') {
+//     return false;
+//   }
+//   
+//   return expr[start] == expr[end] && isForm(expr, start+1, end-1);
+// }
+
+bool isForm(const char* expr, int length) {
+  if (length == 0) {
+    return false;
+  }
+
+  // initial verification
+  if (expr[0] != 'A' && expr[0] != 'B') {
+    return false;
+  }
+
+  std::stack<char> s;
+  int i = 0;
+
+  // read left to right, one character at a time until 'C'
+  while (i < length && expr[i] != 'C') {
+    if (expr[i] != 'A' && expr[i] != 'B') {
+      return false;
+    }
+    s.push(expr[i]);
+    i++;
+  }
+
+  // 'C' not found
+  if (i == length) {
+    return false;
+  }
+
+  // skip 'C'
+  i++;
+
+  // continue reading and compare each character with stack
+  while (i < length) {
+    // if stack is empty, then expr is not balanced
+    if (s.empty()) {
+      return false;
+    }
+
+    // if next char is not the same as top of stack, then expr is not balanced
+    if (s.top() != expr[i]) {
+      return false;
+    }
+
+    // compare next characters
+    s.pop();
+    i++;
+  }
+
+  return s.empty();
+}
+
+bool isXCY2(const char* expr, int& i, int n, int& charCount) {
+  // initial validation
+  if (n == 0 || (expr[0] != 'A' && expr[0] != 'B')) {
+    return false;
+  }
+
+  // first half of expression (x)
+  std::stack<char> s;
+
+  // read left to right, one character at a time, until 'C' or end of expression
+  while (charCount < n && expr[i] != 'C') {
+    if (expr[i] != 'A' && expr[i] != 'B') {
+      return false;
+    }
+    s.push(expr[i]);
+    i++;
+    charCount++;
+  }
+
+  // 'C' not found
+  if (charCount == n) {
+    return false;
+  }
+
+  // skip 'C'
+  i++;
+  charCount++;
+
+  // second half of expression (y)
+  // continue reading, compare each character with stack, until 'D' or end of expression
+  while (charCount < n && expr[i] != 'D') {
+    // if stack is empty with remaining characters left, then expr is not balanced
+    if (s.empty()) {
+      return false;
+    }
+
+    // if next char is not the same as top of stack, then expr is not balanced
+    if (s.top() != expr[i]) {
+      return false;
+    }
+
+    // compare next characters
+    s.pop();
+    i++;
+    charCount++;
+  }
+
+  // if stack is not empty with no more remaining characters, expr is not balanced
+  return s.empty();
+}
+
+bool isDXCY(const char* expr, int length) {
+
+  // initial validation
+  if (length == 0 || (expr[0] != 'A' && expr[0] != 'B')) {
+    return false;
+  }
+
+  int i = 0;
+  int n = length;
+
+  while (i < length) {
+    // skip 'D'
+    if (expr[i] == 'D') {
+      i++;
+      n--;
+    }
+
+    int charCount = 0;
+
+    if (!isXCY2(expr, i, n, charCount)) {
+      return false;
+    }
+
+    n = n - charCount;
   }
 
   return true;

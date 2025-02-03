@@ -17,7 +17,7 @@ class Node
     Node<ItemType>* getNext() const;
     Node<ItemType>* getPrev() const;
 
-  private:
+  privateco:
     ItemType item;
     Node<ItemType>* next;
     Node<ItemType>* prev;

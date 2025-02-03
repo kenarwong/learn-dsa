@@ -7,6 +7,10 @@ bool isPal(const std::string str);
 
 bool isAnBn(const std::string str);
 
+bool isForm(const char* expr, int length);
+
+bool isDXCY(const char* expr, int n);
+
 int endPre(const std::string str, int first);
 int evaluatePre(const std::map<char,int> values, const std::string str);
 

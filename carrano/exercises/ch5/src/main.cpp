@@ -15,6 +15,24 @@ int main()
   //string AnBn = "AAAABBBB";
   cout << "string \"" << AnBn << "\" is" << (isAnBn(AnBn) ? " " : " not ") << "AnBn" << endl;
 
+  // string expr = "AABCBAA";
+  // string expr = "AACBAA";
+  string expr = "ABABBACABBABA";
+  // <expr> = <x> C <y>
+  // <x> = A | B | A <x> | B <x>
+  // <y> = reverse(<x>)
+
+  cout << "string \"" << expr << "\" is" << (isForm(expr.c_str(), expr.length()) ? " " : " not ") << "of the form xCy" << endl;
+
+  // <d-xcy> = <xcy> | <d-xcy> D <xcy>
+  cout << "string \"" << expr << "\" is" << (isDXCY(expr.c_str(), expr.length()) ? " " : " not ") << "of the form DxCy" << endl;
+
+  // expr = "ABBCBBADACADBABCBABDAABACABAA";
+  // expr = "ABBCBBADAACAADBBABCBABBDAAABACABAAADABBBBBACABBBBBA";
+  expr = "ACAD";
+
+  cout << "string \"" << expr << "\" is" << (isDXCY(expr.c_str(), expr.length()) ? " " : " not ") << "of the form DxCy" << endl;
+
   string prefix = "*/abc";
   cout << "the end of prefix expression \"" << prefix << "\" is " << endPre(prefix,0) << endl;
 

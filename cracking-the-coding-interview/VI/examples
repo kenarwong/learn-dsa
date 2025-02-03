@@ -1,0 +1,43 @@
+1) O(n)
+2) O(n^2)
+3) O(n^2)
+4) O(n*m)
+5) O(n*m)
+6) O(n)
+7) a, b, c
+8) 
+  Sort each string, length s = s*logs
+  For a number of strings = a*s*logs
+  Sort array, length a = a*loga
+  For each string comparison = s
+  
+  Total = O(aloga*s + a*slogs) = O(a*s(loga + logs))
+9) O(logn)
+10)
+
+2 | 4
+3 | 9
+. | .
+. | .
+x | k
+
+k^2 = n
+
+k = sqrt(n)
+
+11) O(n)
+12) 
+
+  Base case = Number of total permutations = n! 
+  Number of calls to reach base case = n
+  Each function call = n
+  
+  Number of base cases * number of calls to reach base case * function call = O(n*n*n!)
+
+
+  
+
+  
+
+
+
