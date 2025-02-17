@@ -3,6 +3,7 @@
 
 int main() {
   ListTests();
+  CircularHeaderListTests();
 
   return 0;
 }

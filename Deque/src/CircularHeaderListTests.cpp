@@ -1,29 +1,29 @@
 /**
  * @file ListTests.cpp
- * This file contains unit tests for the LinkedList class.
+ * This file contains unit tests for the CircularHeaderLinkedList class.
  * 
  * The tests include:
- * - Testing the default constructor of the LinkedList class.
- * - Testing the add, remove, contains, and clear methods of the LinkedList class.
+ * - Testing the default constructor of the CircularHeaderLinkedList class.
+ * - Testing the add, remove, contains, and clear methods of the CircularHeaderLinkedList class.
  */
 
-#include "LinkedList.h"
+#include "CircularHeaderLinkedList.h"
 #include "headers.h"
 #include <cassert>
 
 /**
- * Tests the default constructor of the LinkedList class.
+ * Tests the default constructor of the CircularHeaderLinkedList class.
  * 
- * This test ensures that a newly created LinkedList is empty and has a size of 0.
+ * This test ensures that a newly created CircularHeaderLinkedList is empty and has a size of 0.
  */
-void testListConstructor() {
-  LinkedList<int> list;
+void testCircularHeaderListConstructor() {
+  CircularHeaderLinkedList<int> list;
   assert(list.isEmpty());
   assert(list.size() == 0);
 }
 
 /**
- * Tests the add, remove, contains, and clear methods of the LinkedList class.
+ * Tests the add, remove, contains, and clear methods of the CircularHeaderLinkedList class.
  * 
  * This test performs the following checks:
  * - Adds elements to the list and verifies the size.
@@ -31,9 +31,9 @@ void testListConstructor() {
  * - Removes elements from the list and verifies the size and contents.
  * - Clears the list and verifies it is empty.
  */
-void testListAddRemove()
+void testCircularHeaderListAddRemove()
 {
-  LinkedList<std::string> list;
+  CircularHeaderLinkedList<std::string> list;
 
   int size = 5;
   std::string items[size] = {"one", "two", "three", "four", "five"};
@@ -75,13 +75,13 @@ void testListAddRemove()
 } 
 
 /**
- * Runs all the tests for the LinkedList class.
+ * Runs all the tests for the CircularHeaderLinkedList class.
  * 
  * This function calls the individual test functions
  */
-void ListTests()
+void CircularHeaderListTests()
 {
-  testListConstructor();
-  testListAddRemove();
-  std::cout << "--- All List tests passed ---" << std::endl;
+  testCircularHeaderListConstructor();
+  testCircularHeaderListAddRemove();
+  std::cout << "--- All Circular Header List tests passed ---" << std::endl;
 }

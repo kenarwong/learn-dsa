@@ -193,8 +193,12 @@ bool LinkedList<ItemType>::removeBack() {
  * 
  */
 template<class ItemType>
-Node<ItemType>* LinkedList<ItemType>::peekFront() {
-  return headPtr;
+ItemType LinkedList<ItemType>::peekFront() {
+  if (headPtr != nullptr) {
+    return headPtr->getItem();
+  }
+
+  return ItemType();
 }
 
 /**
@@ -205,8 +209,12 @@ Node<ItemType>* LinkedList<ItemType>::peekFront() {
  * 
  */
 template<class ItemType>
-Node<ItemType>* LinkedList<ItemType>::peekBack() {
-  return tailPtr;
+ItemType LinkedList<ItemType>::peekBack() {
+  if (tailPtr != nullptr) {
+    return tailPtr->getItem();
+  }
+
+  return ItemType();
 }
 
 /**

@@ -1,9 +1,9 @@
 /**
- * @file LinkedList.h
- * Header file for the LinkedList class.
+ * @file CircularHeaderLinkedList.h
+ * Header file for the CircularHeaderLinkedList class.
  * 
- * This file contains the definition of the LinkedList class, which implements
- * a linked list. The LinkedList class inherits from the ListInterface
+ * This file contains the definition of the CircularHeaderLinkedList class, which implements
+ * a linked list. The CircularHeaderLinkedList class inherits from the ListInterface
  * class and provides implementations for its virtual methods.
  * 
  */
@@ -15,7 +15,7 @@
 #include "Node.h"
 
 /**
- * @class LinkedList
+ * @class CircularHeaderLinkedList
  * A template class for a linked list.
  * 
  * This class provides methods to manipulate a linked list, including
@@ -25,7 +25,7 @@
  * 
  */
 template<class ItemType>
-class LinkedList: public ListInterface<ItemType>
+class CircularHeaderLinkedList: public ListInterface<ItemType>
 {
 public:
   /**
@@ -34,7 +34,7 @@ public:
    * Initializes an empty linked list.
    * 
    */
-  LinkedList();
+  CircularHeaderLinkedList();
 
   /**
    * Destructor.
@@ -42,7 +42,7 @@ public:
    * Deallocates all nodes in the linked list.
    * 
    */
-  virtual ~LinkedList();
+  virtual ~CircularHeaderLinkedList();
 
   /**
    * Gets the number of elements in the list.
@@ -130,28 +130,27 @@ public:
   bool contains(const ItemType& entry) const override;
 
 private:
-   Node<ItemType>* headPtr; // Pointer to the first node in the list.
-   Node<ItemType>* tailPtr; // Pointer to the last node in the list.
+   Node<ItemType>* header; // Header node
    int count; // The number of elements in the list.
 
-   /**
-    * Traverses the list to find a specific element.
-    * 
-    * @param target The element to find.
-    * @param curPtr The current node pointer.
-    * @return Pointer to the node containing the target element, or nullptr if not found.
-    * 
-    */
-   Node<ItemType>* traverseToPtr(const ItemType& target, Node<ItemType>* curPtr) const;
+  //  /**
+  //   * Traverses the list to find a specific element.
+  //   * 
+  //   * @param target The element to find.
+  //   * @param curPtr The current node pointer.
+  //   * @return Pointer to the node containing the target element, or nullptr if not found.
+  //   * 
+  //   */
+  //  Node<ItemType>* traverseToPtr(const ItemType& target, Node<ItemType>* curPtr) const;
 
-   /**
-    * Helper function.
-    * Clears the list starting from a specific node.
-    * 
-    * @param curPtr The node to start clearing from.
-    */
-   void clear(Node<ItemType>* curPtr);
+  // /**
+  //  * Helper function.
+  //  * Clears the list starting from a specific node.
+  //  * 
+  //  * @param curPtr The node to start clearing from.
+  //  */
+  // void clear(Node<ItemType>* curPtr);
 };
 
-#include "LinkedList.tpp"
+#include "CircularHeaderLinkedList.tpp"
 #endif
