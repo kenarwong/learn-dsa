@@ -80,6 +80,9 @@ bool CircularHeaderLinkedList<ItemType>::addFront(const ItemType& entry) {
     newNodePtr->setNext(newNodePtr);
     newNodePtr->setPrev(newNodePtr);
   } else {
+    // Update header
+    header->setNext(newNodePtr);
+
     // New node now points to previous head and current tail
     newNodePtr->setNext(headPtr);
     newNodePtr->setPrev(tailPtr);
@@ -89,9 +92,6 @@ bool CircularHeaderLinkedList<ItemType>::addFront(const ItemType& entry) {
 
     // Tail now points to new node
     tailPtr->setNext(newNodePtr);
-
-    // Update header
-    header->setNext(newNodePtr);
   }
 
   count++;
@@ -123,6 +123,9 @@ bool CircularHeaderLinkedList<ItemType>::addBack(const ItemType& entry) {
     newNodePtr->setNext(newNodePtr);
     newNodePtr->setPrev(newNodePtr);
   } else {
+    // Update header
+    header->setPrev(newNodePtr);
+
     // New node now points to previous tail and current head
     newNodePtr->setPrev(tailPtr);
     newNodePtr->setNext(headPtr);
@@ -132,9 +135,6 @@ bool CircularHeaderLinkedList<ItemType>::addBack(const ItemType& entry) {
 
     // Previous tail now second last
     tailPtr->setNext(newNodePtr);
-
-    // Update header
-    header->setPrev(newNodePtr);
   }
 
   count++;

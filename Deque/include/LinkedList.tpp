@@ -69,14 +69,11 @@ bool LinkedList<ItemType>::addFront(const ItemType& entry) {
 
   if (headPtr == nullptr) {
     headPtr = newNodePtr; 
+    tailPtr = newNodePtr;
   } else {
     newNodePtr->setNext(headPtr);
     headPtr->setPrev(newNodePtr);
     headPtr = newNodePtr;
-  }
-
-  if (tailPtr == nullptr) {
-    tailPtr = newNodePtr;
   }
 
   count++;
@@ -98,14 +95,11 @@ bool LinkedList<ItemType>::addBack(const ItemType& entry) {
 
   if (tailPtr == nullptr) {
     tailPtr = newNodePtr; 
+    headPtr = newNodePtr;
   } else {
     newNodePtr->setPrev(tailPtr);
     tailPtr->setNext(newNodePtr);
     tailPtr = newNodePtr;
-  }
-
-  if (headPtr == nullptr) {
-    headPtr = newNodePtr;
   }
 
   count++;
