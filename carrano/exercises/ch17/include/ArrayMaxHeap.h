@@ -89,7 +89,7 @@ inline bool ArrayMaxHeap<ItemType>::isLeaf(const int nodeIndex) const
   int rightIndex = getRightChildIndex(nodeIndex);
 
   // If either child index is greater than or equal to itemCount, then node is a leaf
-  return leftIndex >= itemCount || rightIndex >= itemCount;
+  return leftIndex >= itemCount && rightIndex >= itemCount;
 }
 
 template <class ItemType>
