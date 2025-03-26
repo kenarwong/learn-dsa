@@ -171,7 +171,7 @@ ArrayMaxHeap<ItemType>::ArrayMaxHeap(
 
   // Copy values
   for (int i = 0; i < itemCount; i++) {
-    items[i] = someArray[0];
+    items[i] = someArray[i];
   }
 
   // Heapify array

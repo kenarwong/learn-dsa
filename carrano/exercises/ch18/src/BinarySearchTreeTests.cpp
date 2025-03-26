@@ -73,7 +73,7 @@ void testBinarySearchTreeInOrderTraversal() {
   size_t index = 0;
   std::function<void(std::shared_ptr<BinaryNode<int>>)> visit = [&expected, &index](std::shared_ptr<BinaryNode<int>> curPtr) {
     int item = curPtr->getItem();
-    std::cout << "Visiting: " << item << std::endl;
+    // std::cout << "Visiting: " << item << std::endl;
 
     assert(item == expected[index]);
     ++index;

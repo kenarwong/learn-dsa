@@ -1,9 +1,6 @@
-#ifndef BINARY_TREE_TESTS_
-#define BINARY_TREE_TESTS_
+#ifndef B_TREE_TESTS_H
+#define B_TREE_TESTS_H
 
-int BinaryTreeTests();
-int BinarySearchTreeTests();
-int TreeDictionaryTests();
-int HashedDictionaryTests();
+void QuadNodeTests();
 
 #endif

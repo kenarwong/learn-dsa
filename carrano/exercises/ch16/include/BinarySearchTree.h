@@ -53,6 +53,9 @@ protected:
   std::shared_ptr<BinaryNode<ItemType>> findNode(std::shared_ptr<BinaryNode<ItemType>> treePtr,
                 const ItemType& target, bool& success) const;
 
+  // Recursive helper method for deleteRange
+  std::shared_ptr<BinaryNode<ItemType>> deleteRange(std::shared_ptr<BinaryNode<ItemType>> node, const ItemType& key1, const ItemType& key2);
+
 public:
   //------------------------------------------------------------
   // Constructor and Destructor Section.
@@ -78,6 +81,9 @@ public:
 
   ItemType getEntry(const ItemType &anEntry) const; // throw(NotFoundException);
   bool contains(const ItemType &anEntry) const;
+
+  // Delete all nodes within a range of values
+  void deleteRange(const ItemType key1, const ItemType key2);
 
   //------------------------------------------------------------
   // Public Traversals Section.
@@ -198,9 +204,38 @@ std::shared_ptr<BinaryNode<ItemType>> BinarySearchTree<ItemType>::findNode(std::
 }
 
 template <class ItemType>
+std::shared_ptr<BinaryNode<ItemType>> BinarySearchTree<ItemType>::deleteRange(std::shared_ptr<BinaryNode<ItemType>> node, const ItemType& key1, const ItemType& key2)
+{
+  // base case
+  if (node == nullptr) {
+    return nullptr;
+  }
+
+  if (!node->isLeaf()) {
+    // recursively call down left and right subtrees
+    node->setLeftChildPtr(deleteRange(node->getLeftChildPtr(), key1, key2));
+    node->setRightChildPtr(deleteRange(node->getRightChildPtr(), key1, key2));
+  }
+
+  // if node is within range, remove it
+  if (node->getItem() >= key1 && node->getItem() <= key2) {
+    return this->removeNode(node);
+  }
+
+  return node;
+}
+
+template <class ItemType>
+inline void BinarySearchTree<ItemType>::deleteRange(const ItemType key1, const ItemType key2)
+{
+  rootPtr = deleteRange(rootPtr, key1, key2);
+}
+
+template <class ItemType>
 inline BinarySearchTree<ItemType>::BinarySearchTree() : rootPtr(nullptr)
 {
 }
+
 template <class ItemType>
 inline BinarySearchTree<ItemType>::BinarySearchTree(const ItemType &rootItem)
 {

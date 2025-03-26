@@ -2,10 +2,7 @@
 
 int main()
 {
-  BinaryTreeTests();
-  BinarySearchTreeTests();
-  TreeDictionaryTests();
-  HashedDictionaryTests();
+  QuadNodeTests();
 
   return 0;
 } 

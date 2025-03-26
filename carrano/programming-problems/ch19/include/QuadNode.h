@@ -4,37 +4,38 @@
 #ifndef QUAD_NODE_
 #define QUAD_NODE_
 
-#include "helpers.h"
+#include "headers.h"
 
 template<class ItemType>
 class QuadNode
 {
 private:
-  ItemType smallItem, middleItem, largeItem;         // Data portion
-  std::shared_ptr<QuadNode<ItemType>> leftChildPtr;  // Left-child pointer
-  std::shared_ptr<QuadNode<ItemType>> leftMidChildPtr;   // Middle-left-child pointer
-  std::shared_ptr<QuadNode<ItemType>> rightMidChildPtr;   // Middle-right-child pointer
-  std::shared_ptr<QuadNode<ItemType>> rightChildPtr; // Right-child pointer
+  ItemType items[3];
+  int itemCount = 0;
+  std::shared_ptr<QuadNode<ItemType>> children[4]; // Child pointers
+  int childCount = 0;
    
 public:
+  // Constructors
   QuadNode();
+
+  // Leaf nodes
   QuadNode(const ItemType& anItem);
   QuadNode(const ItemType& firstItem,
       const ItemType& secondItem);
   QuadNode(const ItemType& firstItem,
       const ItemType& secondItem,
       const ItemType& thirdItem);
+
+  // Internal nodes
   QuadNode(const ItemType& anItem,
       std::shared_ptr<QuadNode<ItemType>> leftPtr,
-      std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
-      std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
-      std::shared_ptr<QuadNode<ItemType>> rightPtr);
+      std::shared_ptr<QuadNode<ItemType>> leftMidPtr);
   QuadNode(const ItemType& anItem,
       const ItemType& secondItem,
       std::shared_ptr<QuadNode<ItemType>> leftPtr,
       std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
-      std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
-      std::shared_ptr<QuadNode<ItemType>> rightPtr);
+      std::shared_ptr<QuadNode<ItemType>> rightMidPtr);
   QuadNode(const ItemType& anItem,
       const ItemType& secondItem,
       const ItemType& thirdItem,
@@ -42,114 +43,133 @@ public:
       std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
       std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
       std::shared_ptr<QuadNode<ItemType>> rightPtr);
+
+  ~QuadNode();
   
   bool isLeaf() const;
   bool isTwoNode() const;
   bool isThreeNode() const;
   bool isFourNode() const;
+
+  int getItemCount() const;
+  ItemType *getItems();
+  int getChildCount() const;
+  std::shared_ptr<QuadNode<ItemType>> *getChildren();
+
+  /**
+   * Inserts an item to the node
+   * 
+   * @param anItem The item to insert
+   * @pre The node is not full
+   * @post The item is inserted into the node in order,
+   *  and the item count is incremented. 
+   *  Items are shifted to the right to make room for the new item, if needed.
+   */
+  void insertItem(const ItemType& anItem);
+
+  /**
+   * Removes an item from the node at the given position
+   * 
+   * @param position The position of the item to remove
+   * @pre The node is not empty
+   * @post The item at the given position is removed from the node,
+   *  and the item count is decremented.
+   *  Items to the right of the removed item are shifted to the left, if needed.
+   */
+  void removeItem(int position);
+
+  void removeFirstItem();
+  void removeLastItem();
+
+  /**
+   * Inserts a child node to the node
+   * 
+   * @param childPtr The child node to insert
+   * @param position The position to insert the child node
+   * @pre The node is not full
+   * @post The child node is inserted into the node in the correct position,
+   *  and the child count is incremented.
+   *  Current children are shifted to the right to make room for the new child, if needed.
+   */
+  void insertChild(std::shared_ptr<QuadNode<ItemType>> childPtr, int position);
+
+  void insertFirstChild(std::shared_ptr<QuadNode<ItemType>> childPtr);
+  void insertLastChild(std::shared_ptr<QuadNode<ItemType>> childPtr);
+
+  /**
+   * Removes a child node from the node at the given position
+   * 
+   * @param position The position of the child to remove
+   * @pre The node is not empty
+   * @post The child node at the given position is removed from the node,
+   *  and the child count is decremented.
+   *  Children to the right of the removed child are shifted to the left, if needed.
+   */
+  void removeChild(int position);
   
-  ItemType getSmallItem() const;
-  ItemType getMiddleItem() const;
-  ItemType getLargeItem() const;
-  
-  void setSmallItem(const ItemType& anItem);
-  void setMiddleItem(const ItemType& anItem);
-  void setLargeItem(const ItemType& anItem);
-  void setItemInOrder(const ItemType& anItem);
-  
-  auto getLeftChildPtr() const;
-  auto getLeftMidChildPtr() const;
-  auto getRightMidChildPtr() const;
-  auto getRightChildPtr() const;
-  
-  void setLeftChildPtr(std::shared_ptr<QuadNode<ItemType>> leftPtr);
-  void setLeftMidChildPtr(std::shared_ptr<QuadNode<ItemType>> leftMidPtr);
-  void setRightMidChildPtr(std::shared_ptr<QuadNode<ItemType>> rightMidPtr);
-  void setRightChildPtr(std::shared_ptr<QuadNode<ItemType>> rightPtr);
-  void setNextChildPtrInOrder(std::shared_ptr<QuadNode<ItemType>> nextChildPtr);
-}; // end QuadNode
+  void removeFirstChild();
+  void removeLastChild();
+};
 
 template<class ItemType>
-QuadNode<ItemType>::QuadNode() : 
-  leftChildPtr(nullptr), 
-  leftMidChildPtr(nullptr), 
-  rightMidChildPtr(nullptr), 
-  rightChildPtr(nullptr), 
-  item(ItemType())
-{
-}  // end default constructor
+QuadNode<ItemType>::QuadNode() {}
 
 template<class ItemType>
-QuadNode<ItemType>::QuadNode(const ItemType& anItem) : 
-  leftChildPtr(nullptr), 
-  leftMidChildPtr(nullptr), 
-  rightMidChildPtr(nullptr), 
-  rightChildPtr(nullptr), 
-  smallItem(anItem), 
-  middleItem(ItemType()), 
-  largeItem(ItemType())
+QuadNode<ItemType>::QuadNode(const ItemType& anItem) 
 {
-}  // end constructor
+  items[0] = anItem;
+  itemCount = 1;
+}
 
 template<class ItemType>
 QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
-               const ItemType& secondItem) : 
-  leftChildPtr(nullptr), 
-  leftMidChildPtr(nullptr), 
-  rightMidChildPtr(nullptr), 
-  rightChildPtr(nullptr), 
-  smallItem(firstItem), 
-  middleItem(secondItem), 
-  largeItem(ItemType())
+               const ItemType& secondItem) 
 {
-}  // end constructor
+  items[0] = firstItem;
+  items[1] = secondItem;
+  itemCount = 2;
+}
 
 template<class ItemType>
 QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
                const ItemType& secondItem,
-               const ItemType& thirdItem) : 
-  leftChildPtr(nullptr), 
-  leftMidChildPtr(nullptr), 
-  rightMidChildPtr(nullptr), 
-  rightChildPtr(nullptr), 
-  smallItem(firstItem), 
-  middleItem(secondItem), 
-  largeItem(thirdItem)
+               const ItemType& thirdItem) 
 {
-}  // end constructor
+  items[0] = firstItem;
+  items[1] = secondItem;
+  items[2] = thirdItem;
+  itemCount = 3;
+}
 
 template<class ItemType>
 QuadNode<ItemType>::QuadNode(const ItemType& anItem,
                                  std::shared_ptr<QuadNode<ItemType>> leftPtr,
-                                 std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
-                                 std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
-                                 std::shared_ptr<QuadNode<ItemType>> rightPtr) : 
-  leftChildPtr(leftPtr), 
-  leftMidChildPtr(leftMidPtr), 
-  rightMidChildPtr(rightMidPtr), 
-  rightChildPtr(rightPtr),
-  smallItem(anItem), 
-  middleItem(ItemType()), 
-  largeItem(ItemType())
+                                 std::shared_ptr<QuadNode<ItemType>> leftMidPtr) 
 {
-}  // end constructor
+  items[0] = anItem;
+  itemCount = 1;
+
+  children[0] = leftPtr;
+  children[1] = leftMidPtr;
+  childCount = 2;
+}
 
 template<class ItemType>
 QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
                const ItemType& secondItem,
                std::shared_ptr<QuadNode<ItemType>> leftPtr,
                std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
-               std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
-               std::shared_ptr<QuadNode<ItemType>> rightPtr) : 
-  leftChildPtr(leftPtr), 
-  leftMidChildPtr(leftMidPtr), 
-  rightMidChildPtr(rightMidPtr), 
-  rightChildPtr(rightPtr),
-  smallItem(firstItem), 
-  middleItem(secondItem), 
-  largeItem(ItemType())
+               std::shared_ptr<QuadNode<ItemType>> rightMidPtr) 
 {
-}  // end constructor
+  items[0] = firstItem;
+  items[1] = secondItem;
+  itemCount = 2;
+
+  children[0] = leftPtr;
+  children[1] = leftMidPtr;
+  children[2] = rightMidPtr;
+  childCount = 3;
+}
 
 template<class ItemType>
 QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
@@ -158,16 +178,19 @@ QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
                std::shared_ptr<QuadNode<ItemType>> leftPtr,
                std::shared_ptr<QuadNode<ItemType>> leftMidPtr,
                std::shared_ptr<QuadNode<ItemType>> rightMidPtr,
-               std::shared_ptr<QuadNode<ItemType>> rightPtr) : 
-  leftChildPtr(leftPtr), 
-  leftMidChildPtr(leftMidPtr), 
-  rightMidChildPtr(rightMidPtr), 
-  rightChildPtr(rightPtr),
-  smallItem(firstItem), 
-  middleItem(secondItem), 
-  largeItem(thirdItem)
+               std::shared_ptr<QuadNode<ItemType>> rightPtr) 
 {
-}  // end constructor
+  items[0] = firstItem;
+  items[1] = secondItem;
+  items[2] = thirdItem;
+  itemCount = 3;
+
+  children[0] = leftPtr;
+  children[1] = leftMidPtr;
+  children[2] = rightMidPtr;
+  children[3] = rightPtr;
+  childCount = 4;
+}
 
 template <class ItemType>
 QuadNode<ItemType>::~QuadNode()
@@ -179,150 +202,142 @@ QuadNode<ItemType>::~QuadNode()
 template<class ItemType>
 bool QuadNode<ItemType>::isLeaf() const
 {
-  return (leftChildPtr == nullptr
-          && leftMidChildPtr == nullptr
-          && rightMidChildPtr == nullptr
-          && rightChildPtr == nullptr);
-}  // end isLeaf
+  return (childCount == 0);
+}  
 
 template<class ItemType>
 bool QuadNode<ItemType>::isTwoNode() const
 {
-  return (middleItem == ItemType() && largeItem == ItemType());
-}  // end isTwoNode
+  return (itemCount == 1);
+} 
 
 template<class ItemType>
 bool QuadNode<ItemType>::isThreeNode() const
 {
-  return (middleItem != ItemType() && largeItem == ItemType());
-}  // end isThreeNode
+  return (itemCount == 2);
+}  
 
 template<class ItemType>
 bool QuadNode<ItemType>::isFourNode() const
 {
-  return (middleItem != ItemType() && largeItem != ItemType());
-}  // end isFourNode
+  return (itemCount == 3);
+}
 
 template<class ItemType>
-ItemType QuadNode<ItemType>::getSmallItem() const
+int QuadNode<ItemType>::getItemCount() const
 {
-  return smallItem;
-}  // end getSmallItem
+  return itemCount;
+}
 
 template<class ItemType>
-ItemType QuadNode<ItemType>::getMiddleItem() const
+ItemType *QuadNode<ItemType>::getItems() 
 {
-  return middleItem;
-}  // end getMiddleItem
+  return items;
+}
 
 template<class ItemType>
-ItemType QuadNode<ItemType>::getLargeItem() const
+int QuadNode<ItemType>::getChildCount() const
 {
-  return largeItem;
-}  // end getLargeItem
+  return childCount;
+}
 
 template<class ItemType>
-void QuadNode<ItemType>::setSmallItem(const ItemType& anItem)
+std::shared_ptr<QuadNode<ItemType>> *QuadNode<ItemType>::getChildren() 
 {
-  smallItem = anItem;
-}  // end setSmallItem
+  return children;
+}
 
 template<class ItemType>
-void QuadNode<ItemType>::setMiddleItem(const ItemType& anItem)
+void QuadNode<ItemType>::insertItem(const ItemType& anItem)
 {
-  middleItem = anItem;
-}  // end setMiddleItem
-
-template<class ItemType>
-void QuadNode<ItemType>::setLargeItem(const ItemType& anItem)
-{
-  largeItem = anItem;
-}  // end setLargeItem
-
-template <class ItemType>
-void QuadNode<ItemType>::setItemInOrder(const ItemType &anItem)
-{
-  if (isTwoNode()) {
-    if (anItem < smallItem) {
-      setMiddleItem(getSmallItem());
-      setSmallItem(anItem);
-    } else {
-      setMiddleItem(anItem);
+  if (itemCount < 3)
+  {
+    int i = 0;
+    for (; i < itemCount; i++) {
+      if (anItem < items[i]) {
+        for (int j = itemCount; j > i; j--) {
+          items[j] = items[j-1];
+        }
+        break;
+      }
     }
-  } else if (isThreeNode()) {
-    if (anItem < smallItem) {
-      setLargeItem(getMiddleItem());
-      setMiddleItem(getSmallItem());
-      setSmallItem(anItem);
-    } else if (anItem < middleItem) {
-      setLargeItem(getMiddleItem());
-      setMiddleItem(anItem);
-    } else {
-      setLargeItem(anItem);
-    }
+    items[i] = anItem;
+    itemCount++;
   }
 }
 
 template<class ItemType>
-auto QuadNode<ItemType>::getLeftMidChildPtr() const
+void QuadNode<ItemType>::removeItem(int position)
 {
-  return leftMidChildPtr;
-}  // end getLeftMidChildPtr
-
-template<class ItemType>
-auto QuadNode<ItemType>::getLeftChildPtr() const
-{
-  return leftChildPtr;
-}  // end getLeftChildPtr
-
-template<class ItemType>
-auto QuadNode<ItemType>::getRightChildPtr() const
-{
-  return rightChildPtr;
-}  // end getRightChildPtr
-
-template<class ItemType>
-auto QuadNode<ItemType>::getRightMidChildPtr() const
-{
-  return rightMidChildPtr;
-}  // end getRightMidChildPtr
-
-template<class ItemType>
-void QuadNode<ItemType>::setLeftMidChildPtr(std::shared_ptr<QuadNode<ItemType>> leftMidPtr)
-{
-  leftMidChildPtr = leftMidPtr;
-}  // end setLeftMidChildPtr
-
-template<class ItemType>
-void QuadNode<ItemType>::setLeftChildPtr(std::shared_ptr<QuadNode<ItemType>> leftPtr)
-{
-  leftChildPtr = leftPtr;
-}  // end setLeftChildPtr
-
-template<class ItemType>
-void QuadNode<ItemType>::setRightChildPtr(std::shared_ptr<QuadNode<ItemType>> rightPtr)
-{
-  rightChildPtr = rightPtr;
-}  // end setRightChildPtr
-
-template <class ItemType>
-void QuadNode<ItemType>::setNextChildPtrInOrder(std::shared_ptr<QuadNode<ItemType>> nextChildPtr)
-{
-  if (leftChildPtr == nullptr) {
-    setLeftChildPtr(nextChildPtr);
-  } else if (leftMidChildPtr == nullptr) {
-    setLeftMidChildPtr(nextChildPtr);
-  } else if (rightMidChildPtr == nullptr) {
-    setRightMidChildPtr(nextChildPtr);
-  } else {
-    setRightChildPtr(nextChildPtr);
+  if (itemCount > 0)
+  {
+    for (int i = position; i < itemCount-1; i++) {
+      items[i] = items[i+1];
+    }
+    itemCount--;
   }
 }
 
 template<class ItemType>
-void QuadNode<ItemType>::setRightMidChildPtr(std::shared_ptr<QuadNode<ItemType>> rightMidPtr)
+void QuadNode<ItemType>::removeFirstItem()
 {
-  rightMidChildPtr = rightMidPtr;
-}  // end setRightMidChildPtr
+  removeItem(0);
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::removeLastItem()
+{
+  removeItem(itemCount-1);
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::insertChild(std::shared_ptr<QuadNode<ItemType>> childPtr, int position)
+{
+  if (childCount < 4)
+  {
+    for (int j = childCount; j > position; j--) {
+      children[j] = children[j-1];
+    }
+
+    children[position] = childPtr;
+    childCount++;
+  }
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::insertFirstChild(std::shared_ptr<QuadNode<ItemType>> childPtr)
+{
+  insertChild(childPtr, 0);
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::insertLastChild(std::shared_ptr<QuadNode<ItemType>> childPtr)
+{
+  insertChild(childPtr, childCount);
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::removeChild(int position)
+{
+  if (childCount > 0)
+  {
+    for (int i = position; i < childCount-1; i++) {
+      children[i] = children[i+1];
+    }
+    childCount--;
+  }
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::removeFirstChild()
+{
+  removeChild(0);
+}
+
+template<class ItemType>
+void QuadNode<ItemType>::removeLastChild()
+{
+  removeChild(childCount-1);
+}
 
 #endif

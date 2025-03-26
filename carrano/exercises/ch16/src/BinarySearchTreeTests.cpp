@@ -77,7 +77,7 @@ void testInOrderTraversal() {
   size_t index = 0;
   std::function<void(std::shared_ptr<BinaryNode<int>>)>  visit = [&expected, &index](std::shared_ptr<BinaryNode<int>> curPtr) {
     int item = curPtr->getItem();
-    std::cout << "Visiting: " << item << std::endl;
+    // std::cout << "Visiting: " << item << std::endl;
 
     assert(item == expected[index]);
     ++index;
@@ -120,11 +120,43 @@ void testGetEntry()
   std::cout << "testGetEntry passed!" << std::endl;
 }
 
+void testDeleteRange() {
+  BinarySearchTree<int> bst;
+  std::vector<int> items = {42, 17, 23, 8, 34, 56, 3, 29, 11, 19, 27, 31, 45, 50, 6, 1, 14, 21, 38, 49};
+  for (int item : items) {
+    bst.add(item);
+  }
+
+  // Delete range
+  bst.deleteRange(10, 30);
+
+  // Test range
+  for (int item : items) {
+    if (item >= 10 && item <= 30) {
+      assert(bst.contains(item) == false);
+    } else {
+      assert(bst.contains(item) == true);
+    }
+  }
+
+  std::function<void(std::shared_ptr<BinaryNode<int>>)>  visit = [](std::shared_ptr<BinaryNode<int>> curPtr) {
+    int item = curPtr->getItem();
+    std::cout << "Visiting: " << item << std::endl;
+
+    assert(item < 10 || item > 30);
+  };
+
+  bst.inorderTraverse(visit);
+  
+  std::cout << "testDeleteRange passed!" << std::endl;
+}
+
 int BinarySearchTreeTests() {
   testaddAndContains();
   testRemove();
   testInOrderTraversal();
   testGetEntry();
+  testDeleteRange();
 
   std::cout << "All Binary Search Tree tests passed!" << std::endl;
   return 0;

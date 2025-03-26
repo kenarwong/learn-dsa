@@ -168,7 +168,7 @@ std::shared_ptr<BinaryNode<ItemType>> BinaryNodeTree<ItemType>::removeValue(std:
   auto right = subTreePtr->getRightChildPtr();
   if (right != nullptr) {
     auto tempPtr = removeValue(right, target, isSuccessful);  // returns link
-    subTreePtr->setRightChildPtr(tempPtr);                   // set left child to new link, this is where real deletion happens
+    subTreePtr->setRightChildPtr(tempPtr);                   // set right child to new link, this is where real deletion happens
 
     // if successful
     if (isSuccessful) {
