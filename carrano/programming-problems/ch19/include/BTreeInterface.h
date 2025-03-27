@@ -38,11 +38,11 @@ public:
     @return  True if data matching the target occurs in the tree, or false if not. */
    virtual bool contains(const ItemType& target) const = 0;
    
-  //  /** Traverses this Btree in preorder (inorder, postorder) and
-  //      calls the function visit once for each node.
-  //   @param visit  A client-defined function that performs an operation on
-  //      either each visited node or its data. */
-  //  virtual void preorderTraverse(void visit(ItemType&)) const = 0;
+  /** Traverses this Btree in preorder (inorder, postorder) and
+      calls the function visit once for each node.
+   @param visit  A client-defined function that performs an operation on
+      either each visited node or its data. */
+  // virtual void preorderTraverse(void visit(ItemType&)) const = 0;
   //  virtual void inorderTraverse(void visit(ItemType&)) const = 0;
   //  virtual void postorderTraverse(void visit(ItemType&)) const = 0;
    

@@ -3,5 +3,6 @@
 
 #include <iostream>
 #include <memory>
+#include <functional>
 
 #endif

@@ -196,7 +196,7 @@ QuadNode<ItemType>::QuadNode(const ItemType& firstItem,
   childCount = 4;
 }
 
-template <class ItemType>
+template<class ItemType>
 QuadNode<ItemType>::~QuadNode()
 {
   // auto item = this->getItem();
