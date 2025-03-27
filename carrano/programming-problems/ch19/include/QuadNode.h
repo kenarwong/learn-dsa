@@ -5,6 +5,7 @@
 #define QUAD_NODE_
 
 #include "headers.h"
+#include "PrecondViolatedExcept.h"
 
 template<class ItemType>
 class QuadNode
@@ -53,8 +54,10 @@ public:
 
   int getItemCount() const;
   ItemType *getItems();
+  ItemType getItem(int position) const;
   int getChildCount() const;
   std::shared_ptr<QuadNode<ItemType>> *getChildren();
+  std::shared_ptr<QuadNode<ItemType>> getChild(int position) const;
 
   /**
    * Inserts an item to the node
@@ -64,8 +67,9 @@ public:
    * @post The item is inserted into the node in order,
    *  and the item count is incremented. 
    *  Items are shifted to the right to make room for the new item, if needed.
+   * @return The position of the inserted item
    */
-  void insertItem(const ItemType& anItem);
+  int insertItem(const ItemType& anItem);
 
   /**
    * Removes an item from the node at the given position
@@ -236,6 +240,17 @@ ItemType *QuadNode<ItemType>::getItems()
 }
 
 template<class ItemType>
+ItemType QuadNode<ItemType>::getItem(int position) const
+{
+  if (position < 0 || position >= itemCount)
+  {
+    throw PrecondViolatedExcept("Invalid item position");
+  }
+
+  return items[position];
+}
+
+template<class ItemType>
 int QuadNode<ItemType>::getChildCount() const
 {
   return childCount;
@@ -248,33 +263,65 @@ std::shared_ptr<QuadNode<ItemType>> *QuadNode<ItemType>::getChildren()
 }
 
 template<class ItemType>
-void QuadNode<ItemType>::insertItem(const ItemType& anItem)
+std::shared_ptr<QuadNode<ItemType>> QuadNode<ItemType>::getChild(int position) const
+{
+  if (position < 0 || position >= childCount)
+  {
+    return nullptr;
+  }
+
+  return children[position];
+}
+
+template<class ItemType>
+int QuadNode<ItemType>::insertItem(const ItemType& anItem)
 {
   if (itemCount < 3)
   {
     int i = 0;
+    bool exists = false;
     for (; i < itemCount; i++) {
       if (anItem < items[i]) {
         for (int j = itemCount; j > i; j--) {
           items[j] = items[j-1];
         }
         break;
+      } else if (anItem == items[i]) {
+        exists = true;
+        break;
       }
     }
-    items[i] = anItem;
-    itemCount++;
+
+    // Only insert if item does not exist
+    if (!exists) {
+      items[i] = anItem;
+      itemCount++;
+    }
+
+    return i;
+  }
+  else
+  {
+    throw PrecondViolatedExcept("Node is full");
   }
 }
 
 template<class ItemType>
 void QuadNode<ItemType>::removeItem(int position)
 {
+  if (position < 0 || position >= itemCount)
+  {
+    throw PrecondViolatedExcept("Invalid item position");
+  }
+
   if (itemCount > 0)
   {
     for (int i = position; i < itemCount-1; i++) {
       items[i] = items[i+1];
     }
     itemCount--;
+  } else {
+    throw PrecondViolatedExcept("No item to remove");
   }
 }
 
@@ -293,6 +340,11 @@ void QuadNode<ItemType>::removeLastItem()
 template<class ItemType>
 void QuadNode<ItemType>::insertChild(std::shared_ptr<QuadNode<ItemType>> childPtr, int position)
 {
+  if (position < 0 || position > childCount)
+  {
+    throw PrecondViolatedExcept("Invalid child position");
+  }
+
   if (childCount < 4)
   {
     for (int j = childCount; j > position; j--) {
@@ -301,6 +353,8 @@ void QuadNode<ItemType>::insertChild(std::shared_ptr<QuadNode<ItemType>> childPt
 
     children[position] = childPtr;
     childCount++;
+  } else {
+    throw PrecondViolatedExcept("Node is full");
   }
 }
 
@@ -319,12 +373,19 @@ void QuadNode<ItemType>::insertLastChild(std::shared_ptr<QuadNode<ItemType>> chi
 template<class ItemType>
 void QuadNode<ItemType>::removeChild(int position)
 {
+  if (position < 0 || position >= childCount)
+  {
+    throw PrecondViolatedExcept("Invalid child position");
+  }
+
   if (childCount > 0)
   {
     for (int i = position; i < childCount-1; i++) {
       children[i] = children[i+1];
     }
     childCount--;
+  } else {
+    throw PrecondViolatedExcept("No child to remove");
   }
 }
 

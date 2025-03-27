@@ -1,7 +1,5 @@
-/** Interface for the ADT Btree.
- @file BTreeInterface.h */
-#ifndef B_TREE_INTERFACE_
-#define B_TREE_INTERFACE_
+#ifndef B_TREE_INTERFACE_H
+#define B_TREE_INTERFACE_H
 #include "NotFoundException.h"
 
 template<class ItemType>
@@ -19,20 +17,6 @@ public:
    /** Gets the number of nodes in this Btree.
     @return  The number of nodes in the Btree. */
    virtual int getNumberOfNodes() const = 0;
-   
-   /** Gets the data that is in the root of this Btree.
-    @pre  The Btree is not empty.
-    @post  The root's data has been returned, and the Btree is unchanged.
-    @return  The data in the root of the Btree. */
-   virtual ItemType getRootData() const = 0;
-   
-   /** Replaces the data in the root of this Btree with the given data,
-    if the tree is not empty. However, if the tree is empty, inserts a new
-    root node containing the given data into the tree.
-    @pre  None.
-    @post  The data in the root of the Btree is as given.
-    @param newData  The data for the root. */
-   virtual void setRootData(const ItemType& newData) = 0;
    
    /** Adds the given data to this Btree.
     @param newData  The data to add to the Btree.
@@ -61,13 +45,13 @@ public:
     @return  True if data matching the target occurs in the tree, or false if not. */
    virtual bool contains(const ItemType& target) const = 0;
    
-   /** Traverses this Btree in preorder (inorder, postorder) and
-       calls the function visit once for each node.
-    @param visit  A client-defined function that performs an operation on
-       either each visited node or its data. */
-   virtual void preorderTraverse(void visit(ItemType&)) const = 0;
-   virtual void inorderTraverse(void visit(ItemType&)) const = 0;
-   virtual void postorderTraverse(void visit(ItemType&)) const = 0;
+  //  /** Traverses this Btree in preorder (inorder, postorder) and
+  //      calls the function visit once for each node.
+  //   @param visit  A client-defined function that performs an operation on
+  //      either each visited node or its data. */
+  //  virtual void preorderTraverse(void visit(ItemType&)) const = 0;
+  //  virtual void inorderTraverse(void visit(ItemType&)) const = 0;
+  //  virtual void postorderTraverse(void visit(ItemType&)) const = 0;
    
    /** Destroys this tree and frees its assigned memory. */
    virtual ~BTreeInterface() { }

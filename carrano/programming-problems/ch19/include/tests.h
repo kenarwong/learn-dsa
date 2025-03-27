@@ -2,5 +2,6 @@
 #define B_TREE_TESTS_H
 
 void QuadNodeTests();
+void BTreeTests();
 
 #endif

@@ -16,23 +16,26 @@ class Balanced234Tree : public BTreeInterface<ItemType>
 private:
   std::shared_ptr<QuadNode<ItemType>> rootPtr;
 
-  // // Splits a child 4-node, updates current node with middle value,
-  // // links split children to parent node.
-  // void split(std::shared_ptr<QuadNode<ItemType>> subTreePtr,
-  //                std::shared_ptr<QuadNode<ItemType>> childPtr);
+  //------------------------------------------------------------
+  //    Private Utility Methods Section:
+  //    Recursive helper methods for the public methods.
+  //------------------------------------------------------------
+  int getHeightHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
+  int getNumberOfNodesHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
+   
+  // Places a value in the correct node in the tree
+  bool placeValue(std::shared_ptr<QuadNode<ItemType>> subTreePtr,
+                 const ItemType& newValue);
+
+  // Splits a child 4-node, updates current node with middle value,
+  // links split children to parent node.
+  std::shared_ptr<QuadNode<ItemType>> split(
+      std::shared_ptr<QuadNode<ItemType>> subTreePtr,
+      std::shared_ptr<QuadNode<ItemType>> childPtr);
+
+  void destroyTree(std::shared_ptr<QuadNode<ItemType>>& subTreePtr);
 
 protected:
-  // //------------------------------------------------------------
-  // //    Protected Utility Methods Section:
-  // //    Recursive helper methods for the public methods.
-  // //------------------------------------------------------------
-  // int getHeightHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
-  // int getNumberOfNodesHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
-   
-  // // Places a given new node at its proper position in this 2-3-4
-  // // search tree.
-  // auto placeNode(std::shared_ptr<QuadNode<ItemType>> subTreePtr,
-  //                std::shared_ptr<QuadNode<ItemType>> newNode);
           
   // // Get next largest subtree pointer 
   // // Returns next largest child subtree that is empty
@@ -60,34 +63,30 @@ protected:
   //               const ItemType& target, bool& success) const;
 
 public:
-  // //------------------------------------------------------------
-  // // Constructor and Destructor Section.
-  // //------------------------------------------------------------
-  // Balanced234Tree();
-  // Balanced234Tree(const ItemType &rootItem);
-  // Balanced234Tree(const Balanced234Tree<ItemType> &tree);
-  // virtual ~Balanced234Tree();
+  //------------------------------------------------------------
+  // Constructor and Destructor Section.
+  //------------------------------------------------------------
+  Balanced234Tree();
+  Balanced234Tree(const ItemType &rootItem);
+  virtual ~Balanced234Tree();
 
-  // //------------------------------------------------------------
-  // // Public Methods Section.
-  // //------------------------------------------------------------
-  // bool isEmpty() const;
-  // int getHeight() const;
-  // int getNumberOfNodes() const;
+  //------------------------------------------------------------
+  // Public Methods Section.
+  //------------------------------------------------------------
+  bool isEmpty() const;
+  int getHeight() const;
+  int getNumberOfNodes() const;
 
-  // ItemType getRootData() const; // throw(PrecondViolatedExcept);
-  // void setRootData(const ItemType &newData);
+  bool add(const ItemType &newEntry);
+  bool remove(const ItemType &target);
+  void clear();
 
-  // bool add(const ItemType &newEntry);
-  // bool remove(const ItemType &target);
-  // void clear();
+  ItemType getEntry(const ItemType &anEntry) const; // throw(NotFoundException);
+  bool contains(const ItemType &anEntry) const;
 
-  // ItemType getEntry(const ItemType &anEntry) const; // throw(NotFoundException);
-  // bool contains(const ItemType &anEntry) const;
-
-  // //------------------------------------------------------------
-  // // Public Traversals Section.
-  // //------------------------------------------------------------
+  //------------------------------------------------------------
+  // Public Traversals Section.
+  //------------------------------------------------------------
   // void preorderTraverse(void visit(ItemType &)) const;
   // void inorderTraverse(void visit(ItemType &)) const;
   // void postorderTraverse(void visit(ItemType &)) const;
@@ -95,126 +94,167 @@ public:
   // void preorderTraverse(std::function<void(std::shared_ptr<QuadNode<ItemType>>)> visit) const;
   // void inorderTraverse(std::function<void(std::shared_ptr<QuadNode<ItemType>>)> visit) const;
   // void postorderTraverse(std::function<void(std::shared_ptr<QuadNode<ItemType>>)> visit) const;
+};
 
-  // //------------------------------------------------------------
-  // // Overloaded Operator Section.
-  // //------------------------------------------------------------
-  // Balanced234Tree<ItemType> &
-  // operator=(const Balanced234Tree<ItemType> &rightHandSide);
-}; // end Balanced234Tree
-
-// #include "Balanced234Tree.cpp"
 #endif
 
-// template <class ItemType>
-// int Balanced234Tree<ItemType>::
-//     getHeightHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
-// {
-//   if (subTreePtr == nullptr)
-//     return 0;
-//   else
-//     return 1 + std::max(getHeightHelper(subTreePtr->getLeftChildPtr()));
-// }  // end getHeightHelper
+template <class ItemType>
+void Balanced234Tree<ItemType>::destroyTree(std::shared_ptr<QuadNode<ItemType>>& subTreePtr)
+{
+  if (subTreePtr != nullptr)
+  {
+    for (int i = 0; i < subTreePtr->getChildCount(); i++)
+    {
+      auto child = subTreePtr->getChild(i);
+      destroyTree(child);
+    }
+    subTreePtr.reset(); // Decrement reference count to node
+                        // this only ensures that there are no dangling pointers
+                        // it does not directly free the memory        
+                        // once all references are gone, the shared_ptr memory management recognizes this
+                        // and memory will be freed
+  }
+}
 
-// template<class ItemType>
-// int Balanced234Tree<ItemType>::getNumberOfNodesHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
-// {
-//   if (subTreePtr == nullptr)
-//     return 0;
-//   else
-//     return 1 + getNumberOfNodesHelper(subTreePtr->getLeftChildPtr()) +
-//            getNumberOfNodesHelper(subTreePtr->getMidLeftChildPtr()) +
-//            getNumberOfNodesHelper(subTreePtr->getMidRightChildPtr()) +
-//            getNumberOfNodesHelper(subTreePtr->getRightChildPtr());
-// } // end getNumberOfNodesHelper
+template <class ItemType>
+int Balanced234Tree<ItemType>::
+    getHeightHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
+{
+  if (subTreePtr == nullptr) {
+    return 0;
+  } else {
+    int height = 0;
+    for (int i = 0; i < subTreePtr->getChildCount(); i++)
+    {
+      auto child = subTreePtr->getChild(i);
+      int childHeight = getHeightHelper(child);
+      if (childHeight > height)
+      {
+        height = childHeight;
+      }
+    }
 
-// template <class ItemType>
-// void Balanced234Tree<ItemType>::split(std::shared_ptr<QuadNode<ItemType>> subTreePtr, 
-//   std::shared_ptr<QuadNode<ItemType>> childPtr)
-// {
-//   if (childPtr->isFourNode()) {
-//     // if node is full
-//     // split the node
+    return 1 + height;
+  }
+}
 
-//     // create new node with child's small value 
-//     auto newLeftNodePtr = std::make_shared<QuadNode<ItemType>>(childPtr->getSmallItem());
+template<class ItemType>
+int Balanced234Tree<ItemType>::getNumberOfNodesHelper(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
+{
+  if (subTreePtr == nullptr) {
+    return 0;
+  } else if (subTreePtr->isLeaf()) {
+    return 1;
+  } else {
+    int numNodes = 0;
+    for (int i = 0; i < subTreePtr->getChildCount(); i++)
+    {
+      auto child = subTreePtr->getChild(i);
+      numNodes += getNumberOfNodesHelper(child);
+    }
+    return 1 + numNodes;
+  }
+}
 
-//     // create new node with child's large value 
-//     auto newRightNodePtr = std::make_shared<QuadNode<ItemType>>(childPtr->getLargeItem());
+template <class ItemType>
+std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::split(
+  std::shared_ptr<QuadNode<ItemType>> subTreePtr, 
+  std::shared_ptr<QuadNode<ItemType>> childPtr
+) {
+  // split if child node is full
+  if (childPtr->isFourNode()) {
+    auto newLeftNodePtr = std::make_shared<QuadNode<ItemType>>(
+      childPtr->getItem(0)
+    );
+    auto newRightNodePtr = std::make_shared<QuadNode<ItemType>>(
+      childPtr->getItem(2)
+    );
 
-//     // Update parent with child's middle item
-//     subTreePtr->setItemInOrder(childPtr->getMiddleItem());
+    // leaf nodes don't have children
+    if (!childPtr->isLeaf()) {
+      // children of new node are original's 2 left children
+      newLeftNodePtr->insertChild(childPtr->getChild(0), 0);
+      newLeftNodePtr->insertChild(childPtr->getChild(1), 1);
 
-//     // return middle item to parent
-//     // parent updates node with middle item
-//     // then continues to recurse 
-//     // subTreePtr->getMiddleItem();
-//   } 
-//   return;
-// }
+      // children of new node to original's 2 right children
+      newRightNodePtr->insertChild(childPtr->getChild(2), 0);
+      newRightNodePtr->insertChild(childPtr->getChild(3), 1);
+    }
 
-// template <class ItemType>
-// auto Balanced234Tree<ItemType>::placeNode(std::shared_ptr<QuadNode<ItemType>> subTreePtr,
-//                std::shared_ptr<QuadNode<ItemType>> newNode)
-// {
-//   // if (subTreePtr == nullptr)
-//   // {
-//   //   // insert here
-//   //   // return the new node for the parent to link
-//   //   return newNode;
-//   // }
+    // if parent is null (child is root)
+    if (subTreePtr == nullptr) {
+      // create new node with middle value, set children to new nodes
+      return std::make_shared<QuadNode<ItemType>>(
+        childPtr->getItem(1),
+        newLeftNodePtr,
+        newRightNodePtr
+      );
+    } else {
+      // if parent is not null
+      // insert middle value into parent
+      int pos = subTreePtr->insertItem(childPtr->getItem(1));
 
-//   // if node is a duplicate
-//   if (newNode->getItem() == subTreePtr->getSmallItem() ||
-//       newNode->getItem() == subTreePtr->getMiddleItem() ||
-//       newNode->getItem() == subTreePtr->getLargeItem())
-//   {
-//     // do nothing
-//     // return subTreePtr
-//   }
+      // set children of parent to new nodes
+      subTreePtr->insertChild(newLeftNodePtr, pos);
+      subTreePtr->insertChild(newRightNodePtr, pos+1);
+    }
+  } 
 
-//   // determine subtree 
-//   auto nextSubtreePtr;
+  return subTreePtr;
+}
 
-//   if (subTreePtr->isTwoNode()) {
-//     // if 2-node
+template <class ItemType>
+bool Balanced234Tree<ItemType>::placeValue(
+  std::shared_ptr<QuadNode<ItemType>> subTreePtr,
+  const ItemType& newValue
+) {
+  // Empty tree
+  if (subTreePtr == nullptr) {
+    return false;
+  }
 
-//     if (newNode->getItem() < subTreePtr->getSmallItem())
-//     {
-//       // leftPtr
-//       nextSubtreePtr = subTreePtr->leftPtr;
-//     } else {
-//       // leftMidPtr
-//     }
-//   } else if (subTreePtr->isThreeNode()) {
-//     // if 3-node
+  // node is parent and never full
+  // can only perform splits on children
+  if (subTreePtr->isFourNode()) {
+    return false;
+  }
 
-//     if (newNode->getItem() < subTreePtr->getSmallItem())
-//     {
-//       // leftPtr
-//       auto ptr = placeNode(subTreePtr->leftPtr, newNode);
-//       subTreePtr->leftPtr = ptr;
-//     } else if (newNode->getItem() < subTreePtr->getMiddleItem()) {
-//       // leftMidPtr
-//     } else {
-//       // rightMidPtr
-//     }
-//   }
+  // if this node is leaf, insert
+  if (subTreePtr->isLeaf()) {
+    subTreePtr->insertItem(newValue);
+    return true;
+  } else {
+    // if not leaf node (internal)
 
-//   // if not nullptr
-//   if (nextSubtreePtr != nullptr) {
-//     // split child if it is full
-//     if (nextSubtreePtr->isFourNode()) {
-//       split(subTreePtr, nextSubtreePtr);
-//     }
-//   } else {
-//     // insert ?
-//   }
+    // find child to insert value
+    int i = 0;
+    while (i < subTreePtr->getItemCount()) {
+      if (newValue < subTreePtr->getItem(i)) {
+        break;
+      }
+      i++;
+    }
+    auto child = subTreePtr->getChild(i);
 
-//   // auto ptr = placeNode(nextSubtree, newNode);
+    // split child if full
+    if (child->isFourNode()) {
+      split(subTreePtr, child);
 
-//   return subTreePtr;
-// }
+      // find child again after split
+      int i = 0;
+      while (i < subTreePtr->getItemCount()) {
+        if (newValue < subTreePtr->getItem(i)) {
+          break;
+        }
+        i++;
+      }
+      child = subTreePtr->getChild(i);
+    }
+
+    // traverse to child
+    return placeValue(child, newValue);
+  }
+}
 
 
 // template <class ItemType>
@@ -286,114 +326,108 @@ public:
 //   }
 // }
 
-// template <class ItemType>
-// inline Balanced234Tree<ItemType>::Balanced234Tree() : rootPtr(nullptr)
-// {
-// }
-// template <class ItemType>
-// inline Balanced234Tree<ItemType>::Balanced234Tree(const ItemType &rootItem)
-// {
-//   this->rootPtr = std::make_shared<QuadNode<ItemType>>(rootItem);
-// }
+template <class ItemType>
+inline Balanced234Tree<ItemType>::Balanced234Tree() : rootPtr(nullptr)
+{
+}
+template <class ItemType>
 
-// template <class ItemType>
-// inline Balanced234Tree<ItemType>::Balanced234Tree(const Balanced234Tree<ItemType> &tree)
-// {
-//   this->rootPtr = this->copyTree(tree.rootPtr);
-// }
+inline Balanced234Tree<ItemType>::Balanced234Tree(const ItemType &rootItem)
+{
+  this->rootPtr = std::make_shared<QuadNode<ItemType>>(rootItem);
+}
 
-// template <class ItemType>
-// inline Balanced234Tree<ItemType>::~Balanced234Tree()
-// {
-//   this->destroyTree(this->rootPtr);
-// }
+template <class ItemType>
+inline Balanced234Tree<ItemType>::~Balanced234Tree()
+{
+  destroyTree(this->rootPtr);
+}
 
-// template <class ItemType>
-// inline bool Balanced234Tree<ItemType>::isEmpty() const
-// {
-//   return this->rootPtr == nullptr;
-// }
+template <class ItemType>
+inline bool Balanced234Tree<ItemType>::isEmpty() const
+{
+  return this->rootPtr == nullptr;
+}
 
-// template <class ItemType>
-// inline int Balanced234Tree<ItemType>::getHeight() const
-// {
-//   return this->getHeightHelper(this->rootPtr);
-// }
+template <class ItemType>
+inline int Balanced234Tree<ItemType>::getHeight() const
+{
+  return this->getHeightHelper(this->rootPtr);
+}
 
-// template <class ItemType>
-// inline int Balanced234Tree<ItemType>::getNumberOfNodes() const
-// {
-//   return this->getNumberOfNodesHelper(this->rootPtr);
-// }
+template <class ItemType>
+inline int Balanced234Tree<ItemType>::getNumberOfNodes() const
+{
+  return this->getNumberOfNodesHelper(this->rootPtr);
+}
 
-// template <class ItemType>
-// inline ItemType Balanced234Tree<ItemType>::getRootData() const
-// {
-//   if (isEmpty())
-//     throw PrecondViolatedExcept("getRootData() called with empty tree.");
-//   return this->rootPtr->getItem();
-// }
+template <class ItemType>
+inline bool Balanced234Tree<ItemType>::add(const ItemType &newEntry)
+{
+  // Empty tree
+  if (this->rootPtr == nullptr) {
+    this->rootPtr = std::make_shared<QuadNode<ItemType>>(newEntry);
+    return true;
+  }
+  
+  // Split root if full
+  if (this->rootPtr->isFourNode()) {
+    // Root is full
+    this->rootPtr = this->split(nullptr, this->rootPtr);
+  }
 
-// template <class ItemType>
-// inline void Balanced234Tree<ItemType>::setRootData(const ItemType &newData)
-// {
-//   if (isEmpty())
-//     this->rootPtr = std::make_shared<QuadNode<ItemType>>(newData);
-//   else
-//     this->rootPtr->setItem(newData);
-// }
+  // Place value
+  return placeValue(this->rootPtr, newEntry);
+}
 
-// template <class ItemType>
-// inline bool Balanced234Tree<ItemType>::add(const ItemType &newEntry)
-// {
-//   auto newNodePtr = std::make_shared<QuadNode<ItemType>>(newEntry);
-//   this->rootPtr = placeNode(this->rootPtr, newNodePtr);
-//   return true;
-// }
+template <class ItemType>
+inline bool Balanced234Tree<ItemType>::remove(const ItemType &target)
+{
+  // bool isSuccessful = false;
+  // this->rootPtr = removeValue(this->rootPtr, target, isSuccessful);
+  // return isSuccessful;
+  return false;
+}
 
-// template <class ItemType>
-// inline bool Balanced234Tree<ItemType>::remove(const ItemType &target)
-// {
-//   bool isSuccessful = false;
-//   this->rootPtr = removeValue(this->rootPtr, target, isSuccessful);
-//   return isSuccessful;
-// }
+template <class ItemType>
+inline void Balanced234Tree<ItemType>::clear()
+{
+  this->destroyTree(this->rootPtr);
+  this->rootPtr = nullptr;
+}
 
-// template <class ItemType>
-// inline void Balanced234Tree<ItemType>::clear()
-// {
-//   this->destroyTree(this->rootPtr);
-//   this->rootPtr = nullptr;
-// }
+// Need to update for BST
+template <class ItemType>
+inline ItemType Balanced234Tree<ItemType>::getEntry(const ItemType &anEntry) const
+{
+  // bool success = false;
+  // auto node = findNode(rootPtr, anEntry, success);
+  // if (success) {
+  //   return node->getItem();
+  // } else {
+  //   throw NotFoundException("Item not found in tree");
+  // }
 
-// // Need to update for BST
-// template <class ItemType>
-// inline ItemType Balanced234Tree<ItemType>::getEntry(const ItemType &anEntry) const
-// {
-//   bool success = false;
-//   auto node = findNode(rootPtr, anEntry, success);
-//   if (success) {
-//     return node->getItem();
-//   } else {
-//     throw NotFoundException("Item not found in tree");
-//   }
-// }
+  return ItemType();
+}
 
-// // Need to update for BST
-// template <class ItemType>
-// inline bool Balanced234Tree<ItemType>::contains(const ItemType &anEntry) const
-// {
-//   try
-//   {
-//     bool success = false;
-//     findNode(rootPtr, anEntry, success);
-//     return success;
-//   }
-//   catch (NotFoundException &e)
-//   {
-//     return false;
-//   }
-// }
+// Need to update for BST
+template <class ItemType>
+inline bool Balanced234Tree<ItemType>::contains(const ItemType &anEntry) const
+{
+  // try
+  // {
+  //   bool success = false;
+  //   findNode(rootPtr, anEntry, success);
+  //   return success;
+  // }
+  // catch (NotFoundException &e)
+  // {
+  //   return false;
+  // }
+
+  return false;
+}
 
 // template <class ItemType>
 // inline void Balanced234Tree<ItemType>::preorderTraverse(void visit(ItemType &)) const
@@ -444,15 +478,4 @@ public:
 // void Balanced234Tree<ItemType>::postorderTraverse(std::function<void(std::shared_ptr<QuadNode<ItemType>>)> visit) const
 // {
 //   this->postorder(visit, this->rootPtr);
-// }
-
-// template <class ItemType>
-// inline Balanced234Tree<ItemType> &Balanced234Tree<ItemType>::operator=(const Balanced234Tree<ItemType> &rightHandSide)
-// {
-//   if (this != &rightHandSide)
-//   {
-//     this->destroyTree(this->rootPtr);
-//     this->rootPtr = this->copyTree(rightHandSide.rootPtr);
-//   }
-//   return *this;
 // }
