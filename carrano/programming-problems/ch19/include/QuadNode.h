@@ -72,6 +72,16 @@ public:
   int insertItem(const ItemType& anItem);
 
   /**
+   * Replaces an item in the node at the given position
+   * 
+   * @param anItem The item to replace the current item with
+   * @param position The position of the item to replace
+   * @pre The node is not empty
+   * @post The item at the given position is replaced with the new item
+   */
+  void replaceItem(const ItemType& anItem, int position);
+
+  /**
    * Removes an item from the node at the given position
    * 
    * @param position The position of the item to remove
@@ -304,6 +314,17 @@ int QuadNode<ItemType>::insertItem(const ItemType& anItem)
   {
     throw PrecondViolatedExcept("Node is full");
   }
+}
+
+template <class ItemType>
+ void QuadNode<ItemType>::replaceItem(const ItemType &anItem, int position)
+{
+  if (position < 0 || position >= itemCount)
+  {
+    throw PrecondViolatedExcept("Invalid item position");
+  }
+
+  items[position] = anItem;
 }
 
 template<class ItemType>

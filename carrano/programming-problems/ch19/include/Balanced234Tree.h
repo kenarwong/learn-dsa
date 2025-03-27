@@ -43,11 +43,10 @@ private:
   // then an item from the parent node into the destination node.
   void rotate(std::shared_ptr<QuadNode<ItemType>> subTreePtr, int fromChildPos, int toChildPos);
 
-  // Performs a reverse split on 3 items
-  // 1 item from the parent, and 1 item from each 2-node child
-  std::shared_ptr<QuadNode<ItemType>> revSplit(
+  // Fuses 3 items: 1 item from the parent, and 1 item from each 2-node child
+  std::shared_ptr<QuadNode<ItemType>> fuse(
     std::shared_ptr<QuadNode<ItemType>> subTreePtr,
-    int parentItemPos);
+    int parentItemPos
   );
 
   // Removes the given target value from the tree while maintaining a
@@ -55,15 +54,8 @@ private:
   bool removeValue(std::shared_ptr<QuadNode<ItemType>>& subTreePtr,
                    const ItemType target);
   
-  // // // Removes a given node from a tree while maintaining a 2-3-4 search tree.
-  // // auto removeNode(std::shared_ptr<QuadNode<ItemType>> nodePtr);
-  // //
-  // // // Removes the leftmost node in the left subtree of the node
-  // // // pointed to by nodePtr.
-  // // // Sets inorderSuccessor to the value in this node.
-  // // // Returns a pointer to the revised subtree.
-  // // auto removeLeftmostNode(std::shared_ptr<QuadNode<ItemType>>subTreePtr,
-  // //                         ItemType& inorderSuccessor);
+  ItemType findMax(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
+  ItemType findMin(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const;
 
 public:
   //------------------------------------------------------------
@@ -281,9 +273,12 @@ void Balanced234Tree<ItemType>::rotate(
     subTreePtr->insertItem(fromChild->getItem(fromChild->getItemCount()-1));
     fromChild->removeLastItem();
 
-    // move rightmost child from left child to leftmost child of right child
-    toChild->insertFirstChild(fromChild->getChild(fromChild->getChildCount()-1));
-    fromChild->removeLastChild();
+    // if not leaf
+    if (fromChild->getChildCount() > 0) {
+      // move rightmost child from left child to leftmost child of right child
+      toChild->insertFirstChild(fromChild->getChild(fromChild->getChildCount()-1));
+      fromChild->removeLastChild();
+    }
 
   } else {
     // if fromChildPos is right of toChildPos (rotate left)
@@ -296,14 +291,17 @@ void Balanced234Tree<ItemType>::rotate(
     subTreePtr->insertItem(fromChild->getItem(0));
     fromChild->removeFirstItem();
 
-    // move leftmost child from right child to rightmost child of left child
-    toChild->insertLastChild(fromChild->getChild(0));
-    fromChild->removeFirstChild();
+    // if not leaf
+    if (fromChild->getChildCount() > 0) {
+      // move leftmost child from right child to rightmost child of left child
+      toChild->insertLastChild(fromChild->getChild(0));
+      fromChild->removeFirstChild();
+    }
   }
 }
 
 template <class ItemType>
-std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::revSplit(
+std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::fuse(
   std::shared_ptr<QuadNode<ItemType>> subTreePtr,
   int parentItemPos)
 {
@@ -317,11 +315,10 @@ std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::revSplit(
 
   // create fused node
   auto fusedNode = std::make_shared<QuadNode<ItemType>>(
-    parentItem,
     left->getItem(0),
+    parentItem,
     right->getItem(0)
   );
-
 
   // if not leaf, set children
   // @pre assumed that left and right are either both leaves or both not leaves
@@ -332,10 +329,35 @@ std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::revSplit(
     fusedNode->insertChild(right->getChild(1), 3);
   }
 
-  // remove parent item
-  subTreePtr->removeItem(parentItemPos);
-
   return fusedNode;
+}
+
+template<class ItemType>
+ItemType Balanced234Tree<ItemType>::findMax(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
+{
+  if (subTreePtr == nullptr) {
+    throw NotFoundException("Tree is empty");
+  }
+
+  if (subTreePtr->isLeaf()) {
+    return subTreePtr->getItem(subTreePtr->getItemCount()-1);
+  } else {
+    return findMax(subTreePtr->getChild(subTreePtr->getChildCount()-1));
+  }
+}
+
+template<class ItemType>
+ItemType Balanced234Tree<ItemType>::findMin(std::shared_ptr<QuadNode<ItemType>> subTreePtr) const
+{
+  if (subTreePtr == nullptr) {
+    throw NotFoundException("Tree is empty");
+  }
+
+  if (subTreePtr->isLeaf()) {
+    return subTreePtr->getItem(0);
+  } else {
+    return findMin(subTreePtr->getChild(0));
+  }
 }
 
 template<class ItemType>
@@ -348,58 +370,152 @@ bool Balanced234Tree<ItemType>::removeValue(
   }
 
   // search key
-  // int i = 0;
-  // bool found = false;
-  // for(;i < subTreePtr->itemCount();i++) {
-  //   if (subTreePtr->getItem(i) == target) {
-  //     found = true;
-  //     break;
-  //   }
-  // }
+  int i = 0;
+  bool found = false;
+  for(;i < subTreePtr->getItemCount();i++) {
+    if (target < subTreePtr->getItem(i)) {
+      break;
+    } else if (subTreePtr->getItem(i) == target) {
+      found = true;
+      break;
+    }
+  }
 
   // if found
+  if (found) {
+    // only remove keys from leaves
 
-  // if leaf
-  // - if only 1 key in node 
-  // must be root, we ensure that key to delete is never 2-node
-  // delete key, delete root
-  // - if 2+ keys in node
-  // delete key
+    // if leaf
+    if (subTreePtr->isLeaf()) {
+      // if only 1 key in node
+      if (subTreePtr->getItemCount() == 1) {
+        // must be root, we ensure that key to delete is never 2-node
+        if (subTreePtr == rootPtr) {
+          // delete key, delete root
+          subTreePtr->removeItem(i);
+          rootPtr = nullptr;
+        }
+      } else {
+        // if 2+ keys in node
+        // delete key
+        subTreePtr->removeItem(i);
+      }
 
-  // if internal node
-  // - check left child
-  // - check right child
-  // - if both children are 2-nodes
-  //  - reverse split
-  //    - if parent is root and only 1 key
-  //      - set new root
-  //    - recursive remove fused node
-  // - if left child is 3-node
-  //  - get inorder predecessor
-  //  - recursive remove predecessor
-  //  - replace target with predecessor key
-  // - if right child is 3-node
-  //  - get inorder successor
-  //  - recursive remove successor
-  //  - replace target with successor key
+      return true;
 
-  // if not found, find next child to traverse
-  // pre-emptive merging
-  // - if child is 2-node and has left child, and left child is 3+ node
-  //  - rotate right
-  // - if child is 2-node and right child is 3+ node (must have)
-  //  - rotate left
-  // - if both children are 2-nodes
-  //  - reverse split
-  //   - if parent is root and only 1 key
-  //     - set new root
-  // recursive remove on child to traverse
+    } else {
+      // if internal node
 
+      auto leftChild = subTreePtr->getChild(i);
+      auto rightChild = subTreePtr->getChild(i+1);
 
-  // only remove keys from leaves
+      // if both children are 2-nodes
+      if (leftChild->isTwoNode() && rightChild->isTwoNode()) {
+        // fuse
+        auto fusedNode = fuse(subTreePtr, i);
 
-  // subTreePtr->removeItem(i);
+        // if parent is root and only 1 key
+        // otherwise, not possible to have 2-node parent (due to pre-emptive merging)
+        if (subTreePtr == rootPtr && subTreePtr->isTwoNode()) {
+          // set new root
+          rootPtr = fusedNode;
+        } else {
+          // reassign parent's children
+          subTreePtr->removeChild(i);
+          subTreePtr->insertChild(fusedNode, i);
+          subTreePtr->removeChild(i+1);
+          subTreePtr->removeItem(i);
+        }
 
+        // recursive remove on fused node
+        return removeValue(fusedNode, target);
+
+      } else if (!leftChild->isTwoNode()) {
+
+        // get inorder predecessor
+        ItemType pred = findMax(leftChild);
+        // recursive remove predecessor
+        removeValue(leftChild, pred);
+        // replace target with predecessor key
+        subTreePtr->replaceItem(pred, i);
+
+      } else if (!rightChild->isTwoNode()) {
+
+        // get inorder successor
+        ItemType succ = findMin(rightChild);
+        // recursive remove successor
+        removeValue(rightChild, succ);
+        // replace target with successor key
+        subTreePtr->replaceItem(succ, i);
+
+      }
+
+      return true;
+    }
+  } else {
+    // if not found at leaf, then does not exist in tree
+    if (subTreePtr->isLeaf()) {
+      return false;
+    }
+
+    // if not found, find next child to traverse
+    auto child = subTreePtr->getChild(i);
+
+    // pre-emptive merging
+    if (child->isTwoNode()) {
+      // child is 2-node
+
+      // check rotate
+      if (i > 0 && !subTreePtr->getChild(i-1)->isTwoNode()) {
+        // if child is 2-node and has left sibling, and left sibling is 3+ node
+        // rotate right
+        rotate(subTreePtr, i-1, i);
+      } else if (i < subTreePtr->getChildCount()-1 && !subTreePtr->getChild(i+1)->isTwoNode()) {
+        // if child is 2-node and has right sibling, and right sibling is 3+ node
+        // rotate left
+        rotate(subTreePtr, i+1, i);
+      } else {
+        // if child is 2-node and has no 3+ node sibling
+        std::shared_ptr<QuadNode<ItemType>> fusedNode;
+
+        int first;
+
+        // check fuse
+        if (i > 0 && subTreePtr->getChild(i-1)->isTwoNode() ) {
+          // if child and left sibling are 2-nodes
+
+          // fuse
+          fusedNode = fuse(subTreePtr, i-1);
+          first = i-1;
+
+        } else if (i < subTreePtr->getChildCount()-1 && subTreePtr->getChild(i+1)->isTwoNode()) {
+          // if child and right sibling are 2-nodes
+
+          // fuse
+          fusedNode = fuse(subTreePtr, i);
+          first = i;
+        }
+
+        // if parent is root and only 1 key
+        if (subTreePtr == rootPtr && subTreePtr->isTwoNode()) {
+          // set new root
+          rootPtr = fusedNode;
+        } else {
+          // reassign parent's children
+          subTreePtr->removeChild(first);
+          subTreePtr->insertChild(fusedNode, first);
+          subTreePtr->removeChild(first+1);
+          subTreePtr->removeItem(first);
+        }
+
+        // recursive remove on fused node
+        child = fusedNode;
+      }
+    }
+
+    // recursive remove on child to traverse
+    return removeValue(child, target);
+  }
 }
 
 template<class ItemType>
