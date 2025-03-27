@@ -254,7 +254,7 @@ void BTreeFuseTests() {
   assert(tree1.getNumberOfNodes() == 7);
 
   // fuse root
-  tree1.remove(5);
+  assert(tree1.remove(5));
 
   int expected2[] = {2, 4, 9, 1, 3, 6, 7, 8, 10};
   expectedIndex = 0;
@@ -285,7 +285,7 @@ void BTreeFuseTests() {
   assert(tree1.getNumberOfNodes() == 8);
 
   // pre-emptive fuse right sibling
-  tree1.remove(1);
+  assert(tree1.remove(1));
 
   int expected4[] = {7, 4, 2, 3, 5, 6, 9, 8, 10};
   expectedIndex = 0;
@@ -301,7 +301,7 @@ void BTreeFuseTests() {
   assert(tree1.getNumberOfNodes() == 7);
 
   // pre-emptive fuse left sibling
-  tree1.remove(10);
+  assert(tree1.remove(10));
 
   int expected5[] = {4, 7, 2, 3, 5, 6, 8, 9};
   expectedIndex = 0;
@@ -333,7 +333,7 @@ void BTreeFuseTests() {
   assert(tree1.getNumberOfNodes() == 4);
 
   // fuse root item (no new root)
-  tree1.remove(4);
+  assert(tree1.remove(4));
 
   int expected7[] = {7, 2, 5, 8, 9};
   expectedIndex = 0;
@@ -365,7 +365,7 @@ void BTreeFuseTests() {
   assert(tree1.getNumberOfNodes() == 3);
 
   // pre-emptive fuse (new root)
-  tree1.remove(2);
+  assert(tree1.remove(2));
 
   int expected9[] = {7, 8};
   expectedIndex = 0;
@@ -408,7 +408,7 @@ void BTreeRotateTests() {
   assert(tree1.getNumberOfNodes() == 5);
 
   // rotate left (leaf)
-  tree1.remove(1);
+  assert(tree1.remove(1));
 
   int expected2[] = {3, 5, 9, 2, 4, 6, 8, 10};
   expectedIndex = 0;
@@ -424,7 +424,7 @@ void BTreeRotateTests() {
   assert(tree1.getNumberOfNodes() == 5);
 
   // rotate right (leaf)
-  tree1.remove(10);
+  assert(tree1.remove(10));
 
   int expected3[] = {3, 5, 8, 2, 4, 6, 9};
   expectedIndex = 0;
@@ -458,7 +458,7 @@ void BTreeRotateTests() {
   assert(tree1.getNumberOfNodes() == 8);
 
   // rotate left (internal)
-  tree1.remove(1);
+  assert(tree1.remove(1));
 
   int expected5[] = {8, 3, 5, 2, 4, 6, 10, 9, 11, 12};
   expectedIndex = 0;
@@ -474,7 +474,7 @@ void BTreeRotateTests() {
   assert(tree1.getNumberOfNodes() == 8);
 
   // rotate right (internal)
-  tree1.remove(12);
+  assert(tree1.remove(12));
 
   int expected6[] = {5, 3, 2, 4, 8, 10, 6, 9, 11};
   expectedIndex = 0;
@@ -516,7 +516,7 @@ void BTreeInorderTests() {
   assert(tree1.getNumberOfNodes() == 5);
 
   // inorder predecessor (leaf)
-  tree1.remove(5);
+  assert(tree1.remove(5));
 
   int expected2[] = {2, 4, 9, 1, 3, 6, 8, 10};
   expectedIndex = 0;
@@ -532,7 +532,7 @@ void BTreeInorderTests() {
   assert(tree1.getNumberOfNodes() == 5);
 
   // inorder successor (leaf)
-  tree1.remove(4);
+  assert(tree1.remove(4));
 
   int expected3[] = {2, 6, 9, 1, 3, 8, 10};
   expectedIndex = 0;
@@ -571,7 +571,7 @@ void BTreeInorderTests() {
   assert(tree1.getNumberOfNodes() == 9);
 
   // inorder predecessor (internal)
-  tree1.remove(50);
+  assert(tree1.remove(50));
 
   int expected5[] = {45, 5, 25, 1, 2, 15, 35, 75, 95, 55, 65, 85, 99, 100};
   expectedIndex = 0;
@@ -602,7 +602,7 @@ void BTreeInorderTests() {
   assert(tree1.getNumberOfNodes() == 8);
 
   // inorder successor (internal)
-  tree1.remove(45);
+  assert(tree1.remove(45));
 
   int expected7[] = {55, 5, 1, 2, 15, 25, 75, 95, 65, 85, 99, 100};
   expectedIndex = 0;
