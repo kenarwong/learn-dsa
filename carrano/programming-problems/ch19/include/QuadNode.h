@@ -382,6 +382,7 @@ void QuadNode<ItemType>::removeChild(int position)
   {
     for (int i = position; i < childCount-1; i++) {
       children[i] = children[i+1];
+      children[i+1] = nullptr;
     }
     childCount--;
   } else {

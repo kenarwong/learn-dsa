@@ -57,10 +57,9 @@ protected:
   // // auto removeLeftmostNode(std::shared_ptr<QuadNode<ItemType>>subTreePtr,
   // //                         ItemType& inorderSuccessor);
 
-  // // Returns a pointer to the node containing the given value,
-  // // or nullptr if not found.
-  // std::shared_ptr<QuadNode<ItemType>> findNode(std::shared_ptr<QuadNode<ItemType>> treePtr,
-  //               const ItemType& target, bool& success) const;
+  // Returns a pointer to the node containing the given value,
+  // or nullptr if not found.
+  std::shared_ptr<QuadNode<ItemType>> findNode(std::shared_ptr<QuadNode<ItemType>> subTreePtr, const ItemType &targets) const;
 
 public:
   //------------------------------------------------------------
@@ -81,7 +80,6 @@ public:
   bool remove(const ItemType &target);
   void clear();
 
-  ItemType getEntry(const ItemType &anEntry) const; // throw(NotFoundException);
   bool contains(const ItemType &anEntry) const;
 
   //------------------------------------------------------------
@@ -194,6 +192,9 @@ std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::split(
       // insert middle value into parent
       int pos = subTreePtr->insertItem(childPtr->getItem(1));
 
+      // remove current child from parent
+      subTreePtr->removeChild(pos);
+
       // set children of parent to new nodes
       subTreePtr->insertChild(newLeftNodePtr, pos);
       subTreePtr->insertChild(newRightNodePtr, pos+1);
@@ -296,35 +297,30 @@ bool Balanced234Tree<ItemType>::placeValue(
 //   return subTreePtr;
 // }
 
-// template <class ItemType>
-// std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::findNode(std::shared_ptr<QuadNode<ItemType>> treePtr, const ItemType& target, bool& success) const
-// {
-//   if (treePtr == nullptr) {
-//     success = false;
-//     return nullptr;
-//   }
+template <class ItemType>
+std::shared_ptr<QuadNode<ItemType>> Balanced234Tree<ItemType>::findNode(std::shared_ptr<QuadNode<ItemType>> subTreePtr, const ItemType& target) const
+{
+  if (subTreePtr == nullptr) {
+    return nullptr;
+  }
 
-//   if (treePtr->getItem() == target) {
-//     success = true;
-//     return treePtr;
-//   } else if (treePtr->getItem() > target) {
-//     auto left = treePtr->getLeftChildPtr();
-//     if (left != nullptr){ 
-//       return findNode(left, target, success);
-//     } else {
-//       success = false;
-//       return nullptr;
-//     }
-//   } else {
-//     auto right = treePtr->getRightChildPtr();
-//     if (right != nullptr){ 
-//       return findNode(right, target, success);
-//     } else {
-//       success = false;
-//       return nullptr;
-//     }
-//   }
-// }
+  // search keys
+  int i = 0;
+  while (i < subTreePtr->getItemCount())
+  {
+    if (target < subTreePtr->getItem(i))
+    {
+      break;
+    } else if (target == subTreePtr->getItem(i)) {
+      return subTreePtr; // found
+    }
+    i++;
+  }
+  auto child = subTreePtr->getChild(i);
+
+  // search child
+  return findNode(child, target);
+}
 
 template <class ItemType>
 inline Balanced234Tree<ItemType>::Balanced234Tree() : rootPtr(nullptr)
@@ -396,35 +392,23 @@ inline void Balanced234Tree<ItemType>::clear()
   this->rootPtr = nullptr;
 }
 
-// Need to update for BST
-template <class ItemType>
-inline ItemType Balanced234Tree<ItemType>::getEntry(const ItemType &anEntry) const
-{
-  // bool success = false;
-  // auto node = findNode(rootPtr, anEntry, success);
-  // if (success) {
-  //   return node->getItem();
-  // } else {
-  //   throw NotFoundException("Item not found in tree");
-  // }
-
-  return ItemType();
-}
-
-// Need to update for BST
 template <class ItemType>
 inline bool Balanced234Tree<ItemType>::contains(const ItemType &anEntry) const
 {
-  // try
-  // {
-  //   bool success = false;
-  //   findNode(rootPtr, anEntry, success);
-  //   return success;
-  // }
-  // catch (NotFoundException &e)
-  // {
-  //   return false;
-  // }
+  try
+  {
+    std::shared_ptr<QuadNode<ItemType>> node = findNode(this->rootPtr, anEntry);
+    if (node == nullptr)
+    {
+      return false;
+    }
+
+    return true;
+  }
+  catch (NotFoundException &e)
+  {
+    return false;
+  }
 
   return false;
 }

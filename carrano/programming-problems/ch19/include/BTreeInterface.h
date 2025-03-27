@@ -32,13 +32,6 @@ public:
    /** Removes all data from this Btree. */
    virtual void clear() = 0;
    
-   /** Retrieves the specified data from this Btree.
-    @post  The desired data has been returned, and the Btree
-       is unchanged. If no such data was found, an exception is thrown.
-    @param target  The data to locate.
-    @return  The data in the Btree that matches the given data.*/
-   virtual ItemType getEntry(const ItemType& target) const = 0;
-   
    /** Tests whether the specified data occurs in this Btree.
     @post  The Btree is unchanged.
     @param target  The data to find.
